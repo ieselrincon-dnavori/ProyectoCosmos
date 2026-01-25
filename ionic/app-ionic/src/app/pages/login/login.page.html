@@ -1,0 +1,59 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Cosmos Fitness</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <div style="max-width: 400px; margin: auto; margin-top: 15vh;">
+
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Iniciar sesión</ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+
+        <ion-item>
+          <ion-label position="floating">Email</ion-label>
+          <ion-input
+            type="email"
+            [(ngModel)]="email"
+            required>
+          </ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">Contraseña</ion-label>
+          <ion-input
+            type="password"
+            [(ngModel)]="password"
+            required>
+          </ion-input>
+        </ion-item>
+
+        <!-- Mensaje de error -->
+        <ion-text color="danger" *ngIf="errorMsg">
+          <p style="margin-top: 10px;">{{ errorMsg }}</p>
+        </ion-text>
+
+        <!-- Botón login -->
+        <ion-button
+          expand="block"
+          color="primary"
+          style="margin-top: 20px;"
+          (click)="login()"
+          [disabled]="loading">
+
+          <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
+          <span *ngIf="!loading">Entrar</span>
+
+        </ion-button>
+
+      </ion-card-content>
+    </ion-card>
+
+  </div>
+
+</ion-content>
