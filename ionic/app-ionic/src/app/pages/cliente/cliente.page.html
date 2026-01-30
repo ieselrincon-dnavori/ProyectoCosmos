@@ -1,13 +1,49 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>cliente</ion-title>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Mis reservas</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">cliente</ion-title>
-    </ion-toolbar>
-  </ion-header>
-</ion-content>
+<ion-content class="ion-padding">
+
+  <ion-list *ngIf="reservas.length > 0; else sinReservas">
+
+  <ion-item *ngFor="let r of reservas">
+    <ion-label>
+      <h2>{{ r.Horario?.Clase?.nombre_clase }}</h2>
+
+      <p>
+        {{ r.Horario?.fecha }}
+        · {{ r.Horario?.hora_inicio }} - {{ r.Horario?.hora_fin }}
+      </p>
+
+      <p>
+        Profesor:
+        {{ r.Horario?.Clase?.profesor?.nombre }}
+        {{ r.Horario?.Clase?.profesor?.apellidos }}
+      </p>
+
+      <ion-badge
+        [color]="r.estado === 'activa' ? 'success' : 'medium'">
+        {{ r.estado | uppercase }}
+      </ion-badge>
+    </ion-label>
+
+    <ion-button
+      *ngIf="r.estado === 'activa'"
+      color="danger"
+      fill="outline"
+      slot="end"
+      (click)="cancelar(r)">
+      Cancelar
+    </ion-button>
+
+  </ion-item>
+
+</ion-list>
+
+<ng-template #sinReservas>
+  <ion-text color="medium">
+    <p>No tienes reservas.</p>
+  </ion-text>
+</ng-template>

@@ -21,6 +21,16 @@ export class AuthService {
     return JSON.parse(localStorage.getItem('user') || 'null');
   }
 
+  isLogged(): boolean {
+  return !!this.getUser();
+  }
+
+  getRole(): string | null {
+    const user = this.getUser();
+    return user ? user.rol : null;
+  }
+
+
   logout() {
     localStorage.removeItem('user');
   }

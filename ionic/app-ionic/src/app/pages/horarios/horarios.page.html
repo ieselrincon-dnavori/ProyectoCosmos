@@ -1,0 +1,57 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Horarios disponibles</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-list *ngIf="horarios.length > 0; else sinHorarios">
+
+    <ion-item *ngFor="let h of horarios">
+      <ion-label>
+        <h2>{{ h.Clase?.nombre_clase }}</h2>
+        <p>{{ h.fecha }} · {{ h.hora_inicio }} - {{ h.hora_fin }}</p>
+        <p>{{ h.lugar }}</p>
+        <p>
+          Profesor:
+          {{ h.Clase?.profesor?.nombre }}
+          {{ h.Clase?.profesor?.apellidos }}
+        </p>
+        <p>
+            Plazas:
+            {{ h.plazas_ocupadas }} / {{ h.plazas_totales }}
+        </p>
+      </ion-label>
+<ion-button
+  slot="end"
+  color="success"
+  fill="outline"
+  [disabled]="!h.plazas_disponibles || h.ya_reservado"
+  (click)="reservar(h)">
+
+  <ng-container *ngIf="h.ya_reservado">
+    Ya reservado
+  </ng-container>
+
+  <ng-container *ngIf="!h.ya_reservado && !h.plazas_disponibles">
+    Completo
+  </ng-container>
+
+  <ng-container *ngIf="!h.ya_reservado && h.plazas_disponibles">
+    Reservar
+  </ng-container>
+
+</ion-button>
+
+    </ion-item>
+
+  </ion-list>
+
+  <ng-template #sinHorarios>
+    <ion-text color="medium">
+      <p>No hay horarios disponibles.</p>
+    </ion-text>
+  </ng-template>
+
+</ion-content>

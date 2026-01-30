@@ -1,52 +1,48 @@
 const express = require('express');
 const cors = require('cors');
 
-const app = express(); // 👈 esto es lo que faltaba
+const { initDB, Usuario } = require('./database');
+const seed = require('./seed');
+
+const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-// Modelos
-const Usuario = require('./models/Usuario');
-//Rellenado de datos automáticos al iniciar.
-const seed = require('./seed');
-seed();
 
+(async () => {
+  await initDB();
+  await seed();
+})();
 
 // Rutas
 const usuariosRouter = require('./routes/usuarios');
+const horariosRouter = require('./routes/horarios');
+const reservasRouter = require('./routes/reservas');
+
+
 app.use('/usuarios', usuariosRouter);
+app.use('/horarios', horariosRouter);
+app.use('/reservas', reservasRouter);
 
 // Login
 app.post('/login', async (req, res) => {
-  try {
-    const { email, password } = req.body;
+  const { email, password } = req.body;
 
-    const user = await Usuario.findOne({ where: { email } });
-
-    if (!user) {
-      return res.status(401).json({ error: 'Usuario no existe' });
-    }
-
-    if (user.contraseña_hash !== password) {
-      return res.status(401).json({ error: 'Contraseña incorrecta' });
-    }
-
-    res.json(user);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error interno del servidor' });
+  const user = await Usuario.findOne({ where: { email } });
+  if (!user || user.contraseña_hash !== password) {
+    return res.status(401).json({ error: 'Credenciales incorrectas' });
   }
+
+  res.json(user);
 });
 
-// Ruta de prueba
+// Test
 app.get('/', (req, res) => {
   res.json({ mensaje: 'API funcionando 🚀' });
 });
 
-// Puerto
 const PORT = process.env.API_PORT || 3000;
-
 app.listen(PORT, () => {
   console.log(`API escuchando en puerto ${PORT}`);
 });

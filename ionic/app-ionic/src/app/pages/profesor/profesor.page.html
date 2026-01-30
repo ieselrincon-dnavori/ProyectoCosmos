@@ -1,13 +1,79 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>profesor</ion-title>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Mis clases</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">profesor</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+
+  <ion-list *ngIf="horarios.length > 0; else sinHorarios">
+
+    <ion-card *ngFor="let h of horarios">
+
+      <ion-card-header>
+        <ion-card-title>
+          {{ h.Clase.nombre_clase }}
+        </ion-card-title>
+        <ion-card-subtitle>
+          {{ h.fecha }} · {{ h.hora_inicio }} - {{ h.hora_fin }}
+        </ion-card-subtitle>
+      </ion-card-header>
+
+      <ion-card-content>
+
+        <p>
+          <strong>Plazas:</strong>
+          {{ h.plazas_ocupadas }} / {{ h.plazas_totales }}
+        </p>
+
+        <p>
+          <strong>Estado:</strong>
+          <ion-badge
+            [color]="h.reservas_abiertas ? 'success' : 'danger'">
+            {{ h.reservas_abiertas ? 'Abiertas' : 'Cerradas' }}
+          </ion-badge>
+        </p>
+
+        <ion-button
+          expand="block"
+          fill="outline"
+          (click)="verAlumnos(h)">
+          Ver alumnos
+        </ion-button>
+
+        <ion-button
+          expand="block"
+          color="warning"
+          fill="outline"
+          (click)="cambiarEstado(h)">
+          {{ h.reservas_abiertas ? 'Cerrar reservas' : 'Abrir reservas' }}
+        </ion-button>
+
+        <ion-list *ngIf="h.Reservas?.length > 0">
+          <ion-item *ngFor="let r of h.Reservas">
+            <ion-label>
+              {{ r.Usuario.nombre }} {{ r.Usuario.apellidos }}
+            </ion-label>
+
+            <ion-button
+              slot="end"
+              color="danger"
+              size="small"
+              (click)="cancelarAlumno(r)">
+              Cancelar
+            </ion-button>
+          </ion-item>
+        </ion-list>
+
+      </ion-card-content>
+    </ion-card>
+
+  </ion-list>
+
+  <ng-template #sinHorarios>
+    <ion-text color="medium">
+      <p>No tienes horarios asignados.</p>
+    </ion-text>
+  </ng-template>
+
 </ion-content>

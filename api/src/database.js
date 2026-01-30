@@ -1,4 +1,4 @@
-const { Sequelize } = require("sequelize");
+const { Sequelize } = require('sequelize');
 
 const sequelize = new Sequelize(
   process.env.DB_NAME,
@@ -6,20 +6,70 @@ const sequelize = new Sequelize(
   process.env.DB_PASS,
   {
     host: process.env.DB_HOST,
-    dialect: "postgres",
+    dialect: 'postgres',
     logging: false,
   }
 );
 
-// Cargar modelos
-require("./models/Usuario");
+// MODELOS
+const Usuario = require('./models/Usuario')(sequelize);
+const Clase = require('./models/Clase')(sequelize);
+const Horario = require('./models/Horario')(sequelize);
+const Reserva = require('./models/Reserva')(sequelize); // si ya existe
 
-sequelize.authenticate()
-  .then(() => {
-    console.log("✅ Conectado a PostgreSQL");
-    return sequelize.sync();
-  })
-  .then(() => console.log("🚀 Modelos sincronizados correctamente"))
-  .catch(err => console.error("❌ Error en la base de datos:", err));
+// =======================
+// RELACIONES
+// =======================
 
-module.exports = sequelize;
+// Clase ↔ Usuario (profesor)
+Clase.belongsTo(Usuario, {
+  foreignKey: 'id_profesor',
+  as: 'profesor'
+});
+Usuario.hasMany(Clase, {
+  foreignKey: 'id_profesor'
+});
+
+// Horario ↔ Clase
+Horario.belongsTo(Clase, {
+  foreignKey: 'id_clase'
+});
+Clase.hasMany(Horario, {
+  foreignKey: 'id_clase'
+});
+
+// Reserva ↔ Horario
+Reserva.belongsTo(Horario, {
+  foreignKey: 'id_horario'
+});
+Horario.hasMany(Reserva, {
+  foreignKey: 'id_horario'
+});
+
+// Reserva ↔ Usuario (cliente)
+Reserva.belongsTo(Usuario, {
+  foreignKey: 'id_cliente'
+});
+Usuario.hasMany(Reserva, {
+  foreignKey: 'id_cliente'
+});
+
+// =======================
+// INIT DB
+// =======================
+
+async function initDB() {
+  await sequelize.authenticate();
+  console.log('✅ Conectado a PostgreSQL');
+  await sequelize.sync({ alter: false });
+  console.log('🚀 Modelos sincronizados');
+}
+
+module.exports = {
+  sequelize,
+  initDB,
+  Usuario,
+  Clase,
+  Horario,
+  Reserva
+};

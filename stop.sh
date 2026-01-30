@@ -9,3 +9,5 @@ fi
 
 echo "🛑 Parando Cosmos Fitness..."
 $COMPOSE down
+echo "🗑️ Borrando volumen de datos de Postgres..."
+docker volume rm proyectocosmos_postgres_data
