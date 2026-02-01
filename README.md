@@ -33,3 +33,10 @@ chmod +x *.ps1
 Configurar tus credenciales globales para git/github
 
 git config --global credential.helper store
+
+
+
+
+/// EJECUTAR ESTO SI NO FUNCIONA LOS SCRIPT PARA WINDOWS
+
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
