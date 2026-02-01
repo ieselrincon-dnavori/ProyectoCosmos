@@ -60,7 +60,15 @@ router.post('/', async (req, res) => {
     // 1️⃣ Buscar horario + clase
     const horario = await Horario.findByPk(id_horario, {
       include: Clase
+      
     });
+
+
+if (!usuario || !usuario.activo) {
+  return res.status(403).json({
+    error: 'Usuario desactivado'
+  });
+}
 
     if (!horario) {
       return res.status(404).json({ error: 'Horario no existe' });

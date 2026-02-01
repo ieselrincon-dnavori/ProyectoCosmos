@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Alumnos inscritos</ion-title>
+
+    <ion-buttons slot="end">
+      <ion-button (click)="cerrar()">Cerrar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <ion-list *ngIf="reservas.length; else vacio">
+
+    <ion-item *ngFor="let r of reservas">
+
+      <ion-label>
+        <h2>
+          {{ r.Usuario.nombre }}
+          {{ r.Usuario.apellidos }}
+        </h2>
+      </ion-label>
+
+      <ion-button
+        color="danger"
+        fill="outline"
+        (click)="cancelar(r)">
+        Cancelar
+      </ion-button>
+
+    </ion-item>
+
+  </ion-list>
+
+  <ng-template #vacio>
+    <ion-text color="medium">
+      No hay alumnos inscritos.
+    </ion-text>
+  </ng-template>
+
+</ion-content>

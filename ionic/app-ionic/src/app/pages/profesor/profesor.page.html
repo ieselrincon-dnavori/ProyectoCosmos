@@ -6,74 +6,85 @@
 
 <ion-content class="ion-padding">
 
-  <ion-list *ngIf="horarios.length > 0; else sinHorarios">
+  <ion-card *ngFor="let h of horarios" class="ion-margin-bottom">
 
-    <ion-card *ngFor="let h of horarios">
+    <ion-card-header>
+      <ion-card-title>
+        {{ h.Clase.nombre_clase }}
+      </ion-card-title>
 
-      <ion-card-header>
-        <ion-card-title>
-          {{ h.Clase.nombre_clase }}
-        </ion-card-title>
-        <ion-card-subtitle>
-          {{ h.fecha }} · {{ h.hora_inicio }} - {{ h.hora_fin }}
-        </ion-card-subtitle>
-      </ion-card-header>
+      <ion-card-subtitle>
+        {{ h.fecha }} · {{ h.hora_inicio }} - {{ h.hora_fin }}
+      </ion-card-subtitle>
+    </ion-card-header>
 
-      <ion-card-content>
+    <ion-card-content>
 
-        <p>
-          <strong>Plazas:</strong>
-          {{ h.plazas_ocupadas }} / {{ h.plazas_totales }}
-        </p>
+      <p><strong>Lugar:</strong> {{ h.lugar }}</p>
 
-        <p>
-          <strong>Estado:</strong>
-          <ion-badge
-            [color]="h.reservas_abiertas ? 'success' : 'danger'">
-            {{ h.reservas_abiertas ? 'Abiertas' : 'Cerradas' }}
-          </ion-badge>
-        </p>
+      <p>
+        <strong>Plazas:</strong>
+        {{ h.plazas_ocupadas }} / {{ h.plazas_totales }}
+      </p>
 
-        <ion-button
-          expand="block"
-          fill="outline"
-          (click)="verAlumnos(h)">
-          Ver alumnos
-        </ion-button>
+      <!-- Estado -->
+      <ion-chip
+        [color]="h.reservas_abiertas ? 'success' : 'danger'">
+        <ion-label>
+          {{ h.reservas_abiertas ? 'Reservas abiertas' : 'Reservas cerradas' }}
+        </ion-label>
+      </ion-chip>
 
-        <ion-button
-          expand="block"
-          color="warning"
-          fill="outline"
-          (click)="cambiarEstado(h)">
-          {{ h.reservas_abiertas ? 'Cerrar reservas' : 'Abrir reservas' }}
-        </ion-button>
+      <ion-grid class="ion-margin-top">
+        <ion-row>
 
-        <ion-list *ngIf="h.Reservas?.length > 0">
-          <ion-item *ngFor="let r of h.Reservas">
-            <ion-label>
-              {{ r.Usuario.nombre }} {{ r.Usuario.apellidos }}
-            </ion-label>
-
+          <!-- VER ALUMNOS -->
+          <ion-col size="6">
             <ion-button
-              slot="end"
-              color="danger"
-              size="small"
-              (click)="cancelarAlumno(r)">
-              Cancelar
+              expand="block"
+              fill="outline"
+              (click)="verAlumnos(h)">
+              Ver alumnos
             </ion-button>
-          </ion-item>
-        </ion-list>
+          </ion-col>
 
-      </ion-card-content>
-    </ion-card>
+          <!-- ABRIR / CERRAR -->
+          <ion-col size="6">
+            <ion-button
+              expand="block"
+              [color]="h.reservas_abiertas ? 'warning' : 'success'"
+              (click)="cambiarEstado(h)">
 
-  </ion-list>
+              {{ h.reservas_abiertas ? 'Cerrar reservas' : 'Abrir reservas' }}
 
-  <ng-template #sinHorarios>
-    <ion-text color="medium">
-      <p>No tienes horarios asignados.</p>
-    </ion-text>
-  </ng-template>
+            </ion-button>
+          </ion-col>
+
+        </ion-row>
+      </ion-grid>
+
+      <!-- LISTA DE ALUMNOS INLINE -->
+      <ion-list *ngIf="h.Reservas?.length">
+
+        <ion-item *ngFor="let r of h.Reservas">
+
+          <ion-label>
+            {{ r.Usuario.nombre }}
+            {{ r.Usuario.apellidos }}
+          </ion-label>
+
+          <ion-button
+            color="danger"
+            fill="clear"
+            (click)="cancelarAlumno(r)">
+            Cancelar
+          </ion-button>
+
+        </ion-item>
+
+      </ion-list>
+
+    </ion-card-content>
+  </ion-card>
 
 </ion-content>

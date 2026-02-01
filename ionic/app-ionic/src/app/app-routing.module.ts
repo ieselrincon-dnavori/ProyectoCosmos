@@ -42,6 +42,14 @@ const routes: Routes = [
     path: '',
     redirectTo: 'login',
     pathMatch: 'full'
+  },
+  {
+    path: 'alumnos-modal',
+    loadChildren: () => import('./pages/alumnos-modal/alumnos-modal.module').then( m => m.AlumnosModalPageModule)
+  },
+  {
+    path: 'admin-crear-usuario',
+    loadChildren: () => import('./pages/admin-crear-usuario/admin-crear-usuario.module').then( m => m.AdminCrearUsuarioPageModule)
   }
 ];
 

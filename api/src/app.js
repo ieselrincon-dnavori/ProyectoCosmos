@@ -1,9 +1,7 @@
 const express = require('express');
 const cors = require('cors');
-
 const { initDB, Usuario } = require('./database');
 const seed = require('./seed');
-
 const app = express();
 
 app.use(cors());
@@ -27,15 +25,47 @@ app.use('/reservas', reservasRouter);
 
 // Login
 app.post('/login', async (req, res) => {
-  const { email, password } = req.body;
+  try {
 
-  const user = await Usuario.findOne({ where: { email } });
-  if (!user || user.contraseña_hash !== password) {
-    return res.status(401).json({ error: 'Credenciales incorrectas' });
+    const { email, password } = req.body;
+
+    // 🔥 UNA SOLA QUERY
+    const user = await Usuario.findOne({
+      where: { email }
+    });
+
+    if (!user) {
+      return res.status(401).json({
+        error: 'Credenciales incorrectas'
+      });
+    }
+
+    if (!user.activo) {
+      return res.status(403).json({
+        error: 'Usuario desactivado'
+      });
+    }
+
+    if (user.contraseña_hash !== password) {
+      return res.status(401).json({
+        error: 'Credenciales incorrectas'
+      });
+    }
+
+    // 🔐 quitar password antes de enviar
+    const userSafe = user.toJSON();
+    delete userSafe.contraseña_hash;
+
+    res.json(userSafe);
+
+  } catch (err) {
+    res.status(500).json({
+      error: 'Error interno del servidor'
+    });
   }
-
-  res.json(user);
 });
+
+
 
 // Test
 app.get('/', (req, res) => {

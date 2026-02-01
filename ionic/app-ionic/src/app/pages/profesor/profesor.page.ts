@@ -3,6 +3,11 @@ import { AlertController } from '@ionic/angular';
 import { HorarioService } from '../../services/horario.service';
 import { AuthService } from '../../services/auth.service';
 import { ReservaService } from '../../services/reserva.service';
+import { ModalController } from '@ionic/angular';
+import { AlumnosModalPage } from '../alumnos-modal/alumnos-modal.page';
+
+
+
 
 @Component({
   selector: 'app-profesor',
@@ -19,7 +24,9 @@ export class ProfesorPage implements OnInit {
     private horarioService: HorarioService,
     private auth: AuthService,
     private reservaService: ReservaService,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private modalCtrl: ModalController
+
   ) {}
 
   ngOnInit() {
@@ -56,29 +63,15 @@ export class ProfesorPage implements OnInit {
 }
 async verAlumnos(horario: any) {
 
-  const alumnos = horario.alumnos || [];
-
-  if (alumnos.length === 0) {
-    const alert = await this.alertCtrl.create({
-      header: 'Alumnos inscritos',
-      message: 'No hay alumnos inscritos en este horario.',
-      buttons: ['OK']
-    });
-    await alert.present();
-    return;
-  }
-
-  const lista = alumnos
-    .map((a: any) => `• ${a.nombre} ${a.apellidos}`)
-    .join('<br>');
-
-  const alert = await this.alertCtrl.create({
-    header: 'Alumnos inscritos',
-    message: lista,
-    buttons: ['Cerrar']
+  const modal = await this.modalCtrl.create({
+    component: AlumnosModalPage,
+    componentProps: {
+      reservas: horario.Reservas
+    }
   });
 
-  await alert.present();
+  await modal.present();
+
 }
 
 

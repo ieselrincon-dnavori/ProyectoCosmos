@@ -15,7 +15,10 @@ const sequelize = new Sequelize(
 const Usuario = require('./models/Usuario')(sequelize);
 const Clase = require('./models/Clase')(sequelize);
 const Horario = require('./models/Horario')(sequelize);
-const Reserva = require('./models/Reserva')(sequelize); // si ya existe
+const Reserva = require('./models/Reserva')(sequelize);
+const BonoPlan = require('./models/BonoPlan')(sequelize);
+const Pago = require('./models/Pago')(sequelize);
+
 
 // =======================
 // RELACIONES
@@ -71,5 +74,7 @@ module.exports = {
   Usuario,
   Clase,
   Horario,
-  Reserva
+  Reserva,
+  BonoPlan,
+  Pago
 };
