@@ -159,4 +159,55 @@ router.get('/:id/alumnos', async (req, res) => {
   }
 });
 
+// =========================
+// GET /horarios/profesor/:id
+// =========================
+router.get('/profesor/:id', async (req, res) => {
+  try {
+    const horarios = await Horario.findAll({
+      include: [
+        {
+          model: Clase,
+          where: { id_profesor: req.params.id }
+        },
+        {
+          model: Reserva,
+          where: { estado: 'activa' },
+          required: false
+        }
+      ],
+      order: [['fecha', 'ASC'], ['hora_inicio', 'ASC']]
+    });
+
+    const resultado = horarios.map(h => ({
+      ...h.toJSON(),
+      plazas_ocupadas: h.Reservas.length,
+      plazas_totales: h.Clase.capacidad_maxima
+    }));
+
+    res.json(resultado);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 module.exports = router;
