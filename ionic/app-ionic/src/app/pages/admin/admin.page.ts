@@ -66,7 +66,7 @@ export class AdminPage implements OnInit {
             nombre: data.nombre,
             apellidos: data.apellidos,
             email: data.email,
-            contraseña_hash: data.password,
+            password_hash: data.password,
             telefono: data.telefono,
             rol: data.rol
           };

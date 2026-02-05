@@ -40,3 +40,11 @@ git config --global credential.helper store
 /// EJECUTAR ESTO SI NO FUNCIONA LOS SCRIPT PARA WINDOWS
 
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+
+
+//USO DE LA API
+
+Ver horarios
+    curl -s http://localhost:3000/horarios | jq
+

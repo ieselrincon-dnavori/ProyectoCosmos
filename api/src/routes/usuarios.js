@@ -10,7 +10,7 @@ router.get("/", async (req, res) => {
   try {
     const usuarios = await Usuario.findAll({
   where: { activo: true },
-  attributes: { exclude: ['contraseña_hash'] }
+  attributes: { exclude: ['password_hash'] }
 });
 
     res.json(usuarios);
@@ -27,7 +27,7 @@ router.get("/rol/:rol", async (req, res) => {
   try {
     const usuarios = await Usuario.findAll({
       where: { rol: req.params.rol },
-      attributes: { exclude: ['contraseña_hash'] }
+      attributes: { exclude: ['password_hash'] }
     });
 
     res.json(usuarios);
@@ -103,7 +103,7 @@ router.post('/admin', async (req, res) => {
       nombre,
       apellidos,
       email,
-      contraseña_hash,
+      password_hash,
       telefono,
       rol
     } = req.body;
@@ -120,7 +120,7 @@ router.post('/admin', async (req, res) => {
       nombre,
       apellidos,
       email,
-      contraseña_hash,
+      password_hash,
       telefono,
       rol,
       activo: true
@@ -204,5 +204,24 @@ router.patch('/:id/toggle-activo', async (req, res) => {
   }
 });
 
+router.delete('/:id', async (req, res) => {
+  try {
+
+    const usuario = await Usuario.findByPk(req.params.id);
+
+    if (!usuario) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    // Soft delete profesional
+    usuario.activo = false;
+    await usuario.save();
+
+    res.json({ mensaje: 'Usuario desactivado' });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 module.exports = router;

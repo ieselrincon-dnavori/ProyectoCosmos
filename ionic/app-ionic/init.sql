@@ -5,7 +5,7 @@ id_usuario SERIAL PRIMARY KEY,
 nombre VARCHAR(100) NOT NULL,
 apellidos VARCHAR(100) NOT NULL,
 email VARCHAR(100) UNIQUE NOT NULL,
-contraseña_hash VARCHAR(255) NOT NULL,
+password_hash VARCHAR(255) NOT NULL,
 telefono VARCHAR(20),
 rol VARCHAR(20) NOT NULL,
 fecha_registro DATE DEFAULT CURRENT_DATE

@@ -22,8 +22,9 @@ module.exports = (sequelize) => {
   }
 },
     password_hash: {
-  type: DataTypes.STRING,
-  field: 'contraseña_hash' // 👈 mantiene la columna real
+      type: DataTypes.STRING,
+      allowNull:false,
+      field: 'password_hash'
 },
     telefono: DataTypes.STRING,
     rol: DataTypes.STRING,

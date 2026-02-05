@@ -49,7 +49,8 @@ const routes: Routes = [
   },
   {
     path: 'admin-crear-usuario',
-    loadChildren: () => import('./pages/admin-crear-usuario/admin-crear-usuario.module').then( m => m.AdminCrearUsuarioPageModule)
+    loadChildren: () => import('./pages/admin-crear-usuario/admin-crear-usuario.module')
+    .then( m => m.AdminCrearUsuarioPageModule)
   }
 ];
 

@@ -29,36 +29,34 @@ app.post('/login', async (req, res) => {
 
     const { email, password } = req.body;
 
-    // 🔥 UNA SOLA QUERY
     const user = await Usuario.findOne({
-      where: { email }
+      where: {
+        email,
+        activo: true
+      }
     });
 
     if (!user) {
       return res.status(401).json({
-        error: 'Credenciales incorrectas'
+        error: 'Usuario no válido'
       });
     }
 
-    if (!user.activo) {
-      return res.status(403).json({
-        error: 'Usuario desactivado'
-      });
-    }
-
-    if (user.contraseña_hash !== password) {
+    // comprobar password
+    if (user.password_hash !== password) {
       return res.status(401).json({
         error: 'Credenciales incorrectas'
       });
     }
 
-    // 🔐 quitar password antes de enviar
+    // 🔥 eliminar password antes de enviar
     const userSafe = user.toJSON();
-    delete userSafe.contraseña_hash;
+    delete userSafe.password_hash;
 
     res.json(userSafe);
 
   } catch (err) {
+    console.error(err);
     res.status(500).json({
       error: 'Error interno del servidor'
     });

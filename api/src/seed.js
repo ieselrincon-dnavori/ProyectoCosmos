@@ -24,10 +24,11 @@ async function seed() {
       nombre: `Cliente${i}`,
       apellidos: 'Fitness',
       email: `cliente${i}@mail.com`,
-      contraseña_hash: '1234',
+      password_hash: '1234',
       telefono: '600000000',
       rol: 'cliente',
-      fecha_registro: new Date()
+      fecha_registro: new Date(),
+      activo:true
     });
   }
 
@@ -36,22 +37,26 @@ async function seed() {
       nombre: 'Admin',
       apellidos: 'Root',
       email: 'admin@mail.com',
-      contraseña_hash: 'admin',
+      password_hash: 'admin',
       rol: 'admin'
+      ,
+      activo:true
     },
     {
       nombre: 'Ana',
       apellidos: 'Yoga',
       email: 'ana@mail.com',
-      contraseña_hash: '1234',
-      rol: 'profesor'
+      password_hash: '1234',
+      rol: 'profesor',
+      activo:true
     },
     {
       nombre: 'Carlos',
       apellidos: 'Crossfit',
       email: 'carlos@mail.com',
-      contraseña_hash: '1234',
-      rol: 'profesor'
+      password_hash: '1234',
+      rol: 'profesor',
+      activo:true
     },
     ...clientes
   ]);
