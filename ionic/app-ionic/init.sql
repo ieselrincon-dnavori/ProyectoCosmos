@@ -41,16 +41,18 @@ id_profesor INTEGER NOT NULL,
 CONSTRAINT fk_clase_profesor FOREIGN KEY (id_profesor)
 REFERENCES Usuario(id_usuario)
 );
-CREATE TABLE Horario (
-id_horario SERIAL PRIMARY KEY,
-id_clase INTEGER NOT NULL,
-fecha DATE NOT NULL,
-hora_inicio TIME NOT NULL,
-hora_fin TIME NOT NULL,
-lugar VARCHAR(100),
-CONSTRAINT fk_horario_clase FOREIGN KEY (id_clase)
-REFERENCES Clase(id_clase)
+CREATE TABLE Usuario (
+id_usuario SERIAL PRIMARY KEY,
+nombre VARCHAR(100) NOT NULL,
+apellidos VARCHAR(100) NOT NULL,
+email VARCHAR(100) UNIQUE NOT NULL,
+password_hash VARCHAR(255) NOT NULL,
+telefono VARCHAR(20),
+rol VARCHAR(20) NOT NULL,
+activo BOOLEAN DEFAULT true,  -- 👈 AÑADE ESTO
+fecha_registro DATE DEFAULT CURRENT_DATE
 );
+
 CREATE TABLE Reserva (
 id_reserva SERIAL PRIMARY KEY,
 id_cliente INTEGER NOT NULL,
