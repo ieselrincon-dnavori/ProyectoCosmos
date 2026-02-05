@@ -57,6 +57,25 @@ Usuario.hasMany(Reserva, {
   foreignKey: 'id_cliente'
 });
 
+// Pago ↔ Usuario (cliente)
+Pago.belongsTo(Usuario, {
+  foreignKey: 'id_cliente'
+});
+Usuario.hasMany(Pago, {
+  foreignKey: 'id_cliente'
+});
+
+// Pago ↔ BonoPlan
+Pago.belongsTo(BonoPlan, {
+  foreignKey: 'id_bono'
+});
+BonoPlan.hasMany(Pago, {
+  foreignKey: 'id_bono'
+});
+
+
+
+
 // =======================
 // INIT DB
 // =======================
