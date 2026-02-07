@@ -139,4 +139,36 @@ async function seed() {
   console.log("🔥 SEED PRO COMPLETADO");
 }
 
+/*
+========================
+BONOS
+========================
+*/
+const { Usuario, Clase, Horario, Reserva, BonoPlan } = require('./database');
+
+await BonoPlan.bulkCreate([
+  {
+    nombre_bono: 'Bono mensual',
+    precio: 40,
+    duracion_dias: 30,
+    descripcion: 'Acceso ilimitado durante 30 días'
+  },
+  {
+    nombre_bono: 'Bono 10 sesiones',
+    precio: 50,
+    num_sesiones: 10,
+    descripcion: '10 accesos al gimnasio'
+  },
+  {
+    nombre_bono: 'Bono anual',
+    precio: 400,
+    duracion_dias: 365,
+    descripcion: 'Acceso ilimitado durante 1 año'
+  }
+]);
+
+console.log("✅ Bonos creados");
+
+//Exports
+
 module.exports = seed;
