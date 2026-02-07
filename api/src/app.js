@@ -17,11 +17,15 @@ app.use(express.json());
 const usuariosRouter = require('./routes/usuarios');
 const horariosRouter = require('./routes/horarios');
 const reservasRouter = require('./routes/reservas');
+const bonosRouter = require('./routes/bonos');
+
 
 
 app.use('/usuarios', usuariosRouter);
 app.use('/horarios', horariosRouter);
 app.use('/reservas', reservasRouter);
+app.use('/bonos', bonosRouter);
+
 
 // Login
 app.post('/login', async (req, res) => {

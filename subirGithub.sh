@@ -1,18 +1,21 @@
 #!/bin/bash
 
 echo "=============================="
-echo " 🚀 SUBIENDO PROYECTO A GITHUB"
+echo " 🚀 GESTOR DE GITHUB - COSMOS"
 echo "=============================="
 
-# Menú de selección de usuario
+# ==============================
+# Selección de usuario
+# ==============================
+
 echo "👤 ¿Quién está realizando los cambios?"
 echo " [ 1 ] - Domingo"
 echo " [ 2 ] - Dámaris"
 echo " [ 0 ] - Salir"
 echo "------------------------------"
-read -p "Selecciona una opción: " OPCION
+read -p "Selecciona una opción: " USER_OPTION
 
-case $OPCION in
+case $USER_OPTION in
     1)
         USER_NAME="Domingo"
         USER_EMAIL="domingojosenavarroorihuela@alumno.ieselrincon.es"
@@ -22,7 +25,7 @@ case $OPCION in
         USER_EMAIL="damarisvidalrodriguez@alumno.ieselrincon.es"
         ;;
     0)
-        echo "👋 Saliendo sin subir cambios."
+        echo "👋 Saliendo."
         exit 0
         ;;
     *)
@@ -31,42 +34,91 @@ case $OPCION in
         ;;
 esac
 
-# Configurar identidad local para este repositorio
 git config user.name "$USER_NAME"
 git config user.email "$USER_EMAIL"
 
 echo "✅ Identidad configurada como: $USER_NAME"
+echo ""
 
-# Comprobar que estamos en un repo git
+# ==============================
+# Verificar repo
+# ==============================
+
 if [ ! -d ".git" ]; then
   echo "❌ Este directorio no es un repositorio git"
   exit 1
 fi
 
-# Mostrar estado
-echo "📋 Estado actual:"
-git status -s
+# ==============================
+# Menú principal
+# ==============================
 
-# Añadir todo
-echo "➕ Añadiendo archivos..."
-git add .
+echo "📌 ¿Qué deseas hacer?"
+echo " [ 1 ] Subir cambios a DEVELOP"
+echo " [ 2 ] Migrar DEVELOP → MAIN"
+echo " [ 0 ] Salir"
+echo "------------------------------"
+read -p "Selecciona una opción: " OPCION
 
-# Pedir mensaje de commit
-echo ""
-read -p "✏️  Mensaje del commit: " MENSAJE
+# ==============================
+# OPCIÓN 1 → DEVELOP
+# ==============================
 
-if [ -z "$MENSAJE" ]; then
-  MENSAJE="Actualización automática por $USER_NAME"
+if [ "$OPCION" == "1" ]; then
+
+    echo "🌿 Cambiando a rama develop..."
+
+    # Crear develop si no existe
+    git checkout develop 2>/dev/null || git checkout -b develop
+
+    echo "📋 Estado actual:"
+    git status -s
+
+    echo "➕ Añadiendo archivos..."
+    git add .
+
+    read -p "✏️  Mensaje del commit: " MENSAJE
+
+    if [ -z "$MENSAJE" ]; then
+      MENSAJE="Actualización en develop por $USER_NAME"
+    fi
+
+    git commit -m "$MENSAJE"
+
+    echo "⬆️ Subiendo a develop..."
+    git push -u origin develop
+
+    echo ""
+    echo "✅ Cambios subidos a DEVELOP"
+    echo "======================================"
 fi
 
-# Commit
-echo "📦 Creando commit..."
-git commit -m "$MENSAJE"
 
-# Push
-echo "⬆️  Subiendo a GitHub..."
-git push
+# ==============================
+# OPCIÓN 2 → MERGE A MAIN
+# ==============================
 
-echo "======================================"
-echo " ✅ PROYECTO SUBIDO POR $USER_NAME"
-echo "======================================"
+if [ "$OPCION" == "2" ]; then
+
+    echo "⚠️ Vas a migrar DEVELOP → MAIN"
+    read -p "¿Estás seguro? (yes/no): " CONFIRMACION
+
+    if [ "$CONFIRMACION" != "yes" ]; then
+        echo "Cancelado."
+        exit 0
+    fi
+
+    echo "🌿 Cambiando a main..."
+    git checkout main
+
+    echo "🔄 Haciendo merge de develop..."
+    git merge develop
+
+    echo "⬆️ Subiendo main..."
+    git push origin main
+
+    echo ""
+    echo "🚀 DEVELOP MIGRADO A MAIN"
+    echo "======================================"
+fi
+
