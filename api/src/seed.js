@@ -1,4 +1,4 @@
-const { Usuario, Clase, Horario, Reserva } = require('./database');
+const { Usuario, Clase, Horario, Reserva, BonoPlan } = require('./database');
 
 async function seed() {
 
@@ -136,15 +136,11 @@ async function seed() {
 
   console.log("✅ Reservas creadas");
 
-  console.log("🔥 SEED PRO COMPLETADO");
-}
-
-/*
+  /*
 ========================
 BONOS
 ========================
 */
-const { Usuario, Clase, Horario, Reserva, BonoPlan } = require('./database');
 
 await BonoPlan.bulkCreate([
   {
@@ -168,6 +164,14 @@ await BonoPlan.bulkCreate([
 ]);
 
 console.log("✅ Bonos creados");
+
+console.log("🔥 SEED PRO COMPLETADO");
+
+
+
+}
+
+
 
 //Exports
 
