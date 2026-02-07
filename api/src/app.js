@@ -18,13 +18,14 @@ const usuariosRouter = require('./routes/usuarios');
 const horariosRouter = require('./routes/horarios');
 const reservasRouter = require('./routes/reservas');
 const bonosRouter = require('./routes/bonos');
-
+const pagosRouter = require('./routes/pagos');
 
 
 app.use('/usuarios', usuariosRouter);
 app.use('/horarios', horariosRouter);
 app.use('/reservas', reservasRouter);
 app.use('/bonos', bonosRouter);
+app.use('/pagos', pagosRouter);
 
 
 // Login

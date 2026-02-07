@@ -161,18 +161,19 @@ await BonoPlan.bulkCreate([
     duracion_dias: 365,
     descripcion: 'Acceso ilimitado durante 1 año'
   }
+
 ]);
+
+
+
 
 console.log("✅ Bonos creados");
 
 console.log("🔥 SEED PRO COMPLETADO");
 
 
-
+//Insertar nuevos elementos de seed arriba de este comentario.
 }
-
-
-
 //Exports
 
 module.exports = seed;
