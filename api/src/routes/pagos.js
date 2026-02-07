@@ -103,6 +103,11 @@ router.post('/', async (req, res) => {
         error: 'Bono no encontrado'
       });
     }
+    if (bono.num_sesiones) {
+   sesiones_restantes = bono.num_sesiones;
+        }
+
+    
 
     let fecha_vencimiento = null;
 
@@ -112,7 +117,12 @@ router.post('/', async (req, res) => {
       fecha_vencimiento.setDate(
         fecha_vencimiento.getDate() + bono.duracion_dias
       );
+
+      
+
     }
+    
+    
 
     const pago = await Pago.create({
       id_cliente,

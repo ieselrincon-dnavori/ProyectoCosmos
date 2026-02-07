@@ -23,7 +23,20 @@ module.exports = async function bonoActivo(req, res, next) {
         }
       },
       include: [BonoPlan]
+
+
+
     });
+
+    if (
+   pagoActivo.sesiones_restantes !== null &&
+   pagoActivo.sesiones_restantes <= 0
+){
+   return res.status(403).json({
+      error: 'No te quedan sesiones disponibles'
+   });
+}
+
 
     if (!pagoActivo) {
       return res.status(403).json({

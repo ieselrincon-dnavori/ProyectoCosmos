@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { Reserva, Horario, Clase, Usuario } = require('../database');
+const bonoActivo = require('../middleware/bonoActivo');
 
 
 /* =========================
@@ -53,18 +54,14 @@ router.get('/cliente/:id', async (req, res) => {
 ========================= */
 
 
-router.post('/', async (req, res) => {
+router.post('/', bonoActivo, async (req, res) => {
   try {
     const { id_cliente, id_horario } = req.body;
 
-      if (!usuario || !usuario.activo) {
-        return res.status(403).json({
-          error: 'Usuario desactivado'
-        });
-}
+   
     // 1️⃣ Buscar horario + clase
     const horario = await Horario.findByPk(id_horario, {
-      include: Clase
+      include: [Clase]
       
     });
 
@@ -116,7 +113,13 @@ router.post('/', async (req, res) => {
       estado: 'activa'
     });
 
+
     res.status(201).json(reserva);
+
+    if (req.bono.sesiones_restantes !== null) {
+   req.bono.sesiones_restantes--;
+   await req.bono.save();
+}
 
   } catch (err) {
     console.error(err);

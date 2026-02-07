@@ -35,10 +35,19 @@ module.exports = (sequelize) => {
 
     fecha_vencimiento: {
       type: DataTypes.DATEONLY
+    },
+
+    sesiones_restantes: {
+    type: DataTypes.INTEGER,
+    allowNull: true
     }
 
   }, {
     tableName: 'pago',
     timestamps: false
-  });
+  }
+  
+
+
+);
 };
