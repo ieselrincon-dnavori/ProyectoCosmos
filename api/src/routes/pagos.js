@@ -5,8 +5,7 @@ const { Op } = require('sequelize');
 
 
 /* =========================
-   GET /pagos
-   (admin)
+   GET /pagos (admin)
 ========================= */
 router.get('/', async (req, res) => {
   try {
@@ -52,24 +51,43 @@ router.get('/cliente/:id', async (req, res) => {
   }
 });
 
+
 /* =========================
-   BONO ACTIVO DE CLIENTE
+   BONO ACTIVO
 ========================= */
 router.get('/cliente/:id/activo', async (req, res) => {
   try {
 
     const hoy = new Date();
+    const id = req.params.id;
 
-    const pago = await Pago.findOne({
+    // sesiones primero
+    let pago = await Pago.findOne({
       where: {
-        id_cliente: req.params.id,
-        fecha_vencimiento: {
-          [Op.gt]: hoy
+        id_cliente: id,
+        sesiones_restantes: {
+          [Op.gt]: 0
         }
       },
       include: [BonoPlan],
-      order: [['fecha_vencimiento', 'DESC']]
+      order: [['fecha_pago', 'ASC']]
     });
+
+    // si no hay → ilimitado
+    if (!pago) {
+
+      pago = await Pago.findOne({
+        where: {
+          id_cliente: id,
+          fecha_vencimiento: {
+            [Op.gt]: hoy
+          }
+        },
+        include: [BonoPlan],
+        order: [['fecha_vencimiento', 'ASC']]
+      });
+
+    }
 
     if (!pago) {
       return res.json({ activo: false });
@@ -78,6 +96,7 @@ router.get('/cliente/:id/activo', async (req, res) => {
     res.json({
       activo: true,
       bono: pago.BonoPlan.nombre_bono,
+      sesiones_restantes: pago.sesiones_restantes,
       vence: pago.fecha_vencimiento
     });
 
@@ -85,6 +104,7 @@ router.get('/cliente/:id/activo', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
 
 
 /* =========================
@@ -95,7 +115,6 @@ router.post('/', async (req, res) => {
 
     const { id_cliente, id_bono, metodo_pago } = req.body;
 
-    // buscar bono
     const bono = await BonoPlan.findByPk(id_bono);
 
     if (!bono) {
@@ -103,33 +122,30 @@ router.post('/', async (req, res) => {
         error: 'Bono no encontrado'
       });
     }
-    if (bono.num_sesiones) {
-   sesiones_restantes = bono.num_sesiones;
-        }
-
-    
 
     let fecha_vencimiento = null;
+    let sesiones_restantes = null;
 
+    // bonos por duración
     if (bono.duracion_dias) {
-
       fecha_vencimiento = new Date();
       fecha_vencimiento.setDate(
         fecha_vencimiento.getDate() + bono.duracion_dias
       );
-
-      
-
     }
-    
-    
+
+    // bonos por sesiones
+    if (bono.num_sesiones) {
+      sesiones_restantes = bono.num_sesiones;
+    }
 
     const pago = await Pago.create({
       id_cliente,
       id_bono,
       monto: bono.precio,
       metodo_pago,
-      fecha_vencimiento
+      fecha_vencimiento,
+      sesiones_restantes
     });
 
     res.status(201).json(pago);

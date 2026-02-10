@@ -2,6 +2,10 @@ const express = require('express');
 const router = express.Router();
 const { Horario, Clase, Usuario, Reserva } = require('../database');
 
+
+/* =========================
+   GET /horarios
+========================= */
 router.get('/', async (req, res) => {
   try {
     const id_cliente = req.query.id_cliente;
@@ -20,10 +24,15 @@ router.get('/', async (req, res) => {
         },
         {
           model: Reserva,
-          where: { estado: 'activa' },
-          required: false
+          include: [
+            {
+              model: Usuario,
+              attributes: ['id_usuario', 'nombre', 'apellidos']
+            }
+          ]
         }
-      ]
+      ],
+      order: [['fecha', 'ASC'], ['hora_inicio', 'ASC']]
     });
 
     const resultado = horarios.map(h => {
@@ -53,16 +62,90 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET /horarios/profesor/:id
+
+/* =========================
+   PATCH cerrar reservas
+========================= */
+router.patch('/:id/cerrar', async (req, res) => {
+  try {
+    const horario = await Horario.findByPk(req.params.id);
+
+    if (!horario) {
+      return res.status(404).json({ error: 'Horario no encontrado' });
+    }
+
+    horario.reservas_abiertas = false;
+    await horario.save();
+
+    res.json({ mensaje: 'Reservas cerradas' });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
+/* =========================
+   PATCH abrir reservas
+========================= */
+router.patch('/:id/abrir', async (req, res) => {
+  try {
+    const horario = await Horario.findByPk(req.params.id);
+
+    if (!horario) {
+      return res.status(404).json({ error: 'Horario no encontrado' });
+    }
+
+    horario.reservas_abiertas = true;
+    await horario.save();
+
+    res.json({ mensaje: 'Reservas abiertas' });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
+/* =========================
+   GET alumnos de un horario
+========================= */
+router.get('/:id/alumnos', async (req, res) => {
+  try {
+
+    const reservas = await Reserva.findAll({
+      where: {
+        id_horario: req.params.id,
+        estado: 'activa'
+      },
+      include: [
+        {
+          model: Usuario,
+          attributes: ['id_usuario', 'nombre', 'apellidos', 'email']
+        }
+      ]
+    });
+
+    res.json(reservas);
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
+/* =========================
+   GET horarios de profesor
+   🔥 ESTE ERA EL BUG
+========================= */
 router.get('/profesor/:id', async (req, res) => {
   try {
-    const { id } = req.params;
 
     const horarios = await Horario.findAll({
       include: [
         {
           model: Clase,
-          where: { id_profesor: id },
+          where: { id_profesor: req.params.id },
           include: [
             {
               model: Usuario,
@@ -88,126 +171,16 @@ router.get('/profesor/:id', async (req, res) => {
 
     const resultado = horarios.map(h => ({
       ...h.toJSON(),
-      alumnos: h.Reservas.map(r => r.Usuario),
-      plazas_ocupadas: h.Reservas.length,
+      plazas_ocupadas: h.Reservas?.length || 0,
       plazas_totales: h.Clase.capacidad_maxima
     }));
 
     res.json(resultado);
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
-
-// PATCH /horarios/:id/cerrar
-router.patch('/:id/cerrar', async (req, res) => {
-  try {
-    const horario = await Horario.findByPk(req.params.id);
-    if (!horario) {
-      return res.status(404).json({ error: 'Horario no encontrado' });
-    }
-
-    horario.reservas_abiertas = false;
-    await horario.save();
-
-    res.json({ mensaje: 'Reservas cerradas' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// PATCH /horarios/:id/abrir
-router.patch('/:id/abrir', async (req, res) => {
-  try {
-    const horario = await Horario.findByPk(req.params.id);
-    if (!horario) {
-      return res.status(404).json({ error: 'Horario no encontrado' });
-    }
-
-    horario.reservas_abiertas = true;
-    await horario.save();
-
-    res.json({ mensaje: 'Reservas abiertas' });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-
-// =========================
-// GET /horarios/:id/alumnos
-// =========================
-router.get('/:id/alumnos', async (req, res) => {
-  try {
-    const reservas = await Reserva.findAll({
-      where: {
-        id_horario: req.params.id,
-        estado: 'activa'
-      },
-      include: [
-        {
-          model: Usuario,
-          attributes: ['id_usuario', 'nombre', 'apellidos', 'email']
-        }
-      ]
-    });
-
-    res.json(reservas);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// =========================
-// GET /horarios/profesor/:id
-// =========================
-router.get('/profesor/:id', async (req, res) => {
-  try {
-    const horarios = await Horario.findAll({
-      include: [
-        {
-          model: Clase,
-          where: { id_profesor: req.params.id }
-        },
-        {
-          model: Reserva,
-          where: { estado: 'activa' },
-          required: false
-        }
-      ],
-      order: [['fecha', 'ASC'], ['hora_inicio', 'ASC']]
-    });
-
-    const resultado = horarios.map(h => ({
-      ...h.toJSON(),
-      plazas_ocupadas: h.Reservas.length,
-      plazas_totales: h.Clase.capacidad_maxima
-    }));
-
-    res.json(resultado);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 module.exports = router;

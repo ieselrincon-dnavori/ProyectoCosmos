@@ -1,0 +1,57 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-title>Mi bono</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-card *ngIf="bono; else sinBono" color="success">
+
+    <ion-card-header>
+      <ion-card-title>
+        Bono activo
+      </ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+
+      <h2>{{bono.bono}}</h2>
+
+      <p *ngIf="bono.sesiones_restantes">
+        Sesiones restantes:
+        {{bono.sesiones_restantes}}
+      </p>
+
+      <p *ngIf="bono.vence">
+        Válido hasta:
+        {{bono.vence}}
+      </p>
+
+    </ion-card-content>
+
+  </ion-card>
+
+  <ng-template #sinBono>
+
+    <ion-card color="warning">
+
+      <ion-card-header>
+        <ion-card-title>
+          No tienes bono activo
+        </ion-card-title>
+      </ion-card-header>
+
+      <ion-card-content>
+
+        <ion-button routerLink="/bonos">
+          Comprar bono
+        </ion-button>
+
+      </ion-card-content>
+
+    </ion-card>
+
+  </ng-template>
+
+</ion-content>

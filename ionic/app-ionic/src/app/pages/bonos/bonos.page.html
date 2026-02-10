@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-title>Planes disponibles</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-card *ngFor="let bono of bonos">
+
+    <ion-card-header>
+      <ion-card-title>
+        {{bono.nombre_bono}}
+      </ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+
+      <h1>{{bono.precio}}€</h1>
+
+      <p>{{bono.descripcion}}</p>
+
+      <p *ngIf="bono.num_sesiones">
+        🎟️ {{bono.num_sesiones}} sesiones
+      </p>
+
+      <p *ngIf="bono.duracion_dias">
+        📅 {{bono.duracion_dias}} días
+      </p>
+
+      <ion-button
+        expand="block"
+        color="primary"
+        (click)="comprar(bono)">
+        Comprar
+      </ion-button>
+
+    </ion-card-content>
+
+  </ion-card>
+
+</ion-content>

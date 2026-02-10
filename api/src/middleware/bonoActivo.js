@@ -15,37 +15,42 @@ module.exports = async function bonoActivo(req, res, next) {
 
     const hoy = new Date();
 
-    const pagoActivo = await Pago.findOne({
+    // 🔥 1️⃣ Buscar bonos de SESIONES primero
+    let pago = await Pago.findOne({
       where: {
         id_cliente: idCliente,
-        fecha_vencimiento: {
-          [Op.gt]: hoy
+        sesiones_restantes: {
+          [Op.gt]: 0
         }
       },
-      include: [BonoPlan]
-
-
-
+      include: [BonoPlan],
+      order: [['fecha_pago', 'ASC']] // consume el más antiguo
     });
 
-    if (
-   pagoActivo.sesiones_restantes !== null &&
-   pagoActivo.sesiones_restantes <= 0
-){
-   return res.status(403).json({
-      error: 'No te quedan sesiones disponibles'
-   });
-}
+    // 🔥 2️⃣ Si no hay sesiones → buscar ilimitado activo
+    if (!pago) {
 
+      pago = await Pago.findOne({
+        where: {
+          id_cliente: idCliente,
+          fecha_vencimiento: {
+            [Op.gt]: hoy
+          }
+        },
+        include: [BonoPlan],
+        order: [['fecha_vencimiento', 'ASC']]
+      });
 
-    if (!pagoActivo) {
+    }
+
+    if (!pago) {
       return res.status(403).json({
-        error: 'Necesitas un bono activo para reservar'
+        error: 'Necesitas un bono activo'
       });
     }
 
-    // opcional — dejamos info útil
-    req.bono = pagoActivo;
+    // 👉 lo guardamos para el router de reservas
+    req.bono = pago;
 
     next();
 

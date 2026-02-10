@@ -51,6 +51,18 @@ const routes: Routes = [
     path: 'admin-crear-usuario',
     loadChildren: () => import('./pages/admin-crear-usuario/admin-crear-usuario.module')
     .then( m => m.AdminCrearUsuarioPageModule)
+  },
+  {
+    path: 'bonos',
+    loadChildren: () => import('./pages/bonos/bonos.module').then( m => m.BonosPageModule)
+  },
+  {
+    path: 'comprar-bono',
+    loadChildren: () => import('./pages/comprar-bono/comprar-bono.module').then( m => m.ComprarBonoPageModule)
+  },
+  {
+    path: 'mi-bono',
+    loadChildren: () => import('./pages/mi-bono/mi-bono.module').then( m => m.MiBonoPageModule)
   }
 ];
 

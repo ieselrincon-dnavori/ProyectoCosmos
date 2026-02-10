@@ -6,6 +6,48 @@
 
 <ion-content class="ion-padding">
 
+<div *ngIf="cargandoBono" class="ion-text-center">
+  <ion-spinner></ion-spinner>
+</div>
+
+<!-- SIN BONO -->
+<ion-card *ngIf="!cargandoBono && !bonoActivo" color="warning">
+  <ion-card-header>
+    <ion-card-title>No tienes bono activo</ion-card-title>
+  </ion-card-header>
+
+  <ion-card-content>
+    Compra un bono para poder reservar clases.
+  </ion-card-content>
+
+  <ion-button expand="block" (click)="irComprarBono()">
+    Comprar bono
+  </ion-button>
+</ion-card>
+
+<!-- CON BONO -->
+<ion-card *ngIf="bonoActivo" color="success">
+  <ion-card-header>
+    <ion-card-title>{{bonoActivo.bono}}</ion-card-title>
+  </ion-card-header>
+
+  <ion-card-content>
+
+    <p *ngIf="bonoActivo.sesiones_restantes !== null">
+      Sesiones restantes:
+      <strong>{{bonoActivo.sesiones_restantes}}</strong>
+    </p>
+
+    <p *ngIf="bonoActivo.vence">
+      Válido hasta: {{bonoActivo.vence}}
+    </p>
+
+  </ion-card-content>
+</ion-card>
+
+
+
+
   <ion-list *ngIf="reservas.length > 0; else sinReservas">
 
   <ion-item *ngFor="let r of reservas">

@@ -69,8 +69,8 @@
         <ion-item *ngFor="let r of h.Reservas">
 
           <ion-label>
-            {{ r.Usuario.nombre }}
-            {{ r.Usuario.apellidos }}
+            {{ r.Usuario?.nombre }}
+            {{ r.Usuario?.apellidos }}
           </ion-label>
 
           <ion-button

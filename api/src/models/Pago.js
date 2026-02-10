@@ -29,25 +29,23 @@ module.exports = (sequelize) => {
       allowNull: false
     },
 
-    metodo_pago: {
-      type: DataTypes.STRING
-    },
+    metodo_pago: DataTypes.STRING,
 
-    fecha_vencimiento: {
-      type: DataTypes.DATEONLY
-    },
+    fecha_vencimiento: DataTypes.DATEONLY,
 
     sesiones_restantes: {
-    type: DataTypes.INTEGER,
-    allowNull: true
+      type: DataTypes.INTEGER,
+      allowNull: true
     }
 
   }, {
-    tableName: 'pago',
-    timestamps: false
-  }
-  
-
-
-);
+  tableName: 'pago',
+  timestamps: false,
+  indexes: [
+    { fields: ['id_cliente'] },
+    { fields: ['sesiones_restantes'] },
+    { fields: ['fecha_vencimiento'] }
+  ]
+});
+//FIN
 };
