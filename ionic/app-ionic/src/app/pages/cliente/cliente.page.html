@@ -1,91 +1,197 @@
 <ion-header>
-  <ion-toolbar color="primary">
-    <ion-title>Mis reservas</ion-title>
+  <ion-toolbar class="custom-toolbar">
+    
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+
+    <ion-title>
+      <img src="assets/logo-blanco.png"
+           alt="Cosmos Fitness"
+           class="header-logo">
+    </ion-title>
+
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-
-<div *ngIf="cargandoBono" class="ion-text-center">
-  <ion-spinner></ion-spinner>
-</div>
-
-<!-- SIN BONO -->
-<ion-card *ngIf="!cargandoBono && !bonoActivo" color="warning">
-  <ion-card-header>
-    <ion-card-title>No tienes bono activo</ion-card-title>
-  </ion-card-header>
-
-  <ion-card-content>
-    Compra un bono para poder reservar clases.
-  </ion-card-content>
-
-  <ion-button expand="block" (click)="irComprarBono()">
-    Comprar bono
-  </ion-button>
-</ion-card>
-
-<!-- CON BONO -->
-<ion-card *ngIf="bonoActivo" color="success">
-  <ion-card-header>
-    <ion-card-title>{{bonoActivo.bono}}</ion-card-title>
-  </ion-card-header>
-
-  <ion-card-content>
-
-    <p *ngIf="bonoActivo.sesiones_restantes !== null">
-      Sesiones restantes:
-      <strong>{{bonoActivo.sesiones_restantes}}</strong>
-    </p>
-
-    <p *ngIf="bonoActivo.vence">
-      Válido hasta: {{bonoActivo.vence}}
-    </p>
-
-  </ion-card-content>
-</ion-card>
 
 
 
+<ion-content class="ion-padding cosmos-page">
 
-  <ion-list *ngIf="reservas.length > 0; else sinReservas">
+  <!-- HEADER -->
+  <div class="page-header">
+    <h1>Hola, {{user?.nombre}} 👋</h1>
+    <p class="subtitle">¿Listo para entrenar hoy?</p>
+  </div>
 
-  <ion-item *ngFor="let r of reservas">
-    <ion-label>
-      <h2>{{ r.Horario?.Clase?.nombre_clase }}</h2>
 
-      <p>
-        {{ r.Horario?.fecha }}
-        · {{ r.Horario?.hora_inicio }} - {{ r.Horario?.hora_fin }}
-      </p>
+  <!-- LOADING -->
+  <div *ngIf="cargandoBono" class="loading-container">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
 
-      <p>
-        Profesor:
-        {{ r.Horario?.Clase?.profesor?.nombre }}
-        {{ r.Horario?.Clase?.profesor?.apellidos }}
-      </p>
 
-      <ion-badge
-        [color]="r.estado === 'activa' ? 'success' : 'medium'">
-        {{ r.estado | uppercase }}
-      </ion-badge>
-    </ion-label>
+  <!-- BONO -->
+  <ion-card class="bono-activo-card" *ngIf="!cargandoBono">
 
-    <ion-button
-      *ngIf="r.estado === 'activa'"
-      color="danger"
-      fill="outline"
-      slot="end"
-      (click)="cancelar(r)">
-      Cancelar
-    </ion-button>
+    <ng-container *ngIf="bonoActivo; else sinBono">
 
-  </ion-item>
+      <div class="card-header-gradient">
+        <div class="status-badge">
+          <ion-icon name="checkmark-circle"></ion-icon>
+          <span>BONO ACTIVO</span>
+        </div>
+      </div>
 
-</ion-list>
+      <ion-card-content>
 
-<ng-template #sinReservas>
-  <ion-text color="medium">
-    <p>No tienes reservas.</p>
-  </ion-text>
-</ng-template>
+        <h2 class="bono-tipo">{{bonoActivo.bono}}</h2>
+
+        <div class="bono-info-grid">
+
+          <div class="info-card" *ngIf="bonoActivo.sesiones_restantes !== null">
+            <div class="info-icon">
+              <ion-icon name="ticket-outline"></ion-icon>
+            </div>
+
+            <div class="info-content">
+              <span class="info-label">Sesiones restantes</span>
+              <span class="info-value">{{bonoActivo.sesiones_restantes}}</span>
+            </div>
+          </div>
+
+          <div class="info-card" *ngIf="bonoActivo.vence">
+            <div class="info-icon">
+              <ion-icon name="calendar-outline"></ion-icon>
+            </div>
+
+            <div class="info-content">
+              <span class="info-label">Válido hasta</span>
+              <span class="info-value">{{bonoActivo.vence}}</span>
+            </div>
+          </div>
+
+        </div>
+
+      </ion-card-content>
+
+    </ng-container>
+
+
+    <!-- SIN BONO -->
+    <ng-template #sinBono>
+
+      <ion-card-content class="sin-bono">
+
+        <div class="empty-icon">
+          <ion-icon name="rocket-outline"></ion-icon>
+        </div>
+
+        <h2>Activa tu cuenta</h2>
+
+        <p>
+          Compra un bono para empezar a reservar clases y alcanzar tus objetivos.
+        </p>
+
+        <ion-button expand="block" routerLink="/bonos" class="btn-comprar">
+          Comprar bono
+        </ion-button>
+
+      </ion-card-content>
+
+    </ng-template>
+
+  </ion-card>
+
+
+
+  <!-- STATS -->
+  <div class="bono-info-grid">
+
+    <div class="info-card">
+      <div class="info-icon">
+        <ion-icon name="calendar"></ion-icon>
+      </div>
+
+      <div class="info-content">
+        <span class="info-label">Reservas totales</span>
+        <span class="info-value">{{reservas.length}}</span>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <div class="info-icon">
+        <ion-icon name="fitness"></ion-icon>
+      </div>
+
+      <div class="info-content">
+        <span class="info-label">Reservas activas</span>
+        <span class="info-value">{{reservasActivas}}</span>
+      </div>
+    </div>
+
+  </div>
+
+
+
+  <!-- LISTA -->
+  <div class="section-header">
+    <h2 class="section-title">Tus próximas clases</h2>
+  </div>
+
+
+  <div *ngIf="reservas.length > 0">
+
+    <ion-card *ngFor="let r of reservas" class="sin-bono-card">
+
+      <ion-card-content>
+
+        <h3>{{ r.Horario?.Clase?.nombre_clase }}</h3>
+
+        <p>
+          {{ r.Horario?.fecha }}
+          ·
+          {{ r.Horario?.hora_inicio }} - {{ r.Horario?.hora_fin }}
+        </p>
+
+        <p>
+          {{ r.Horario?.Clase?.profesor?.nombre }}
+          {{ r.Horario?.Clase?.profesor?.apellidos }}
+        </p>
+
+        <ion-button
+          *ngIf="r.estado === 'activa'"
+          expand="block"
+          fill="outline"
+          color="danger"
+          (click)="cancelar(r)">
+          Cancelar reserva
+        </ion-button>
+
+      </ion-card-content>
+
+    </ion-card>
+
+  </div>
+
+
+
+  <!-- EMPTY -->
+  <ion-card *ngIf="reservas.length === 0 && !cargandoBono" class="sin-bono-card">
+
+    <ion-card-content>
+
+      <div class="empty-icon">
+        <ion-icon name="calendar-outline"></ion-icon>
+      </div>
+
+      <h2>No tienes reservas</h2>
+
+      <p>Empieza a reservar tus clases y aparecerán aquí.</p>
+
+    </ion-card-content>
+
+  </ion-card>
+
+</ion-content>

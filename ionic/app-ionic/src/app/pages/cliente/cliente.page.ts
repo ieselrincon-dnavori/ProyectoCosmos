@@ -1,170 +1,100 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertController } from '@ionic/angular';
 import { ReservaService } from '../../services/reserva.service';
-import { HorarioService } from '../../services/horario.service';
-import { AuthService } from '../../services/auth.service';
 import { BonoService } from '../../services/bono';
+import { AuthService } from '../../services/auth.service';
+import { UserStateService } from '../../services/user-state.service';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-cliente',
-  standalone: false,
   templateUrl: './cliente.page.html',
-  styleUrls: ['./cliente.page.scss']
+  styleUrls: ['./cliente.page.scss'],
+  standalone: false,
 })
 export class ClientePage implements OnInit {
 
-  user: any;
-
-  horarios: any[] = [];
   reservas: any[] = [];
+  reservasActivas: number = 0;
 
-  // 🔥 NUEVO
   bonoActivo: any = null;
-  cargandoBono = true;
+  cargandoBono: boolean = true;
+
+  user: any;
 
   constructor(
     private reservaService: ReservaService,
-    private horarioService: HorarioService,
-    private auth: AuthService,
-    private alertCtrl: AlertController,
     private bonoService: BonoService,
-    private router: Router
+    private auth: AuthService,
+    private router: Router,
+    private userState: UserStateService  // 🔥 Añadido
   ) {}
 
   ngOnInit() {
     this.user = this.auth.getUser();
-
-    this.verificarBono(); // 🔥 PRIMERO
+    this.cargarBono();
     this.cargarReservas();
   }
 
-  // =====================
-  // BONO
-  // =====================
+  // 🔥 SOLUCIÓN: Usar ionViewWillEnter para recargar al volver a la página
+  ionViewWillEnter() {
+    this.cargarBono();
+    this.cargarReservas();
+  }
 
-  verificarBono() {
+  // 🔥 BONO
+  cargarBono() {
+    this.cargandoBono = true;
 
     this.bonoService
       .getBonoActivo(this.user.id_usuario)
       .subscribe({
-        next: res => {
-
-          // ⚠️ tu backend devuelve {activo:false}
-          if (!res.activo) {
-            this.bonoActivo = null;
-            this.cargandoBono = false;
-            return;
-          }
-
-          this.bonoActivo = res;
+        next: (bono) => {
+          this.bonoActivo = bono;
           this.cargandoBono = false;
-
-          // SOLO cargamos horarios si tiene bono
-          this.cargarHorarios();
+          
+          // 🔥 SOLUCIÓN: Actualizar estado global
+          this.userState.setBono(bono);
         },
+
         error: () => {
           this.bonoActivo = null;
           this.cargandoBono = false;
+          
+          // 🔥 SOLUCIÓN: Limpiar estado global si no hay bono
+          this.userState.setBono(null);
         }
       });
   }
 
-  irComprarBono(){
-    this.router.navigate(['/bonos']);
-  }
-
-  // =====================
-  // HORARIOS
-  // =====================
-
-  cargarHorarios() {
-
-    if(!this.bonoActivo) return;
-
-    this.horarioService
-      .getHorarios(this.user.id_usuario)
-      .subscribe({
-        next: data => this.horarios = data,
-        error: err => console.error(err)
-      });
-  }
-
-  get tieneReservasActivas(): boolean {
-    return this.reservas.some(r => r.estado === 'activa');
-  }
-
-  reservar(idHorario: number) {
-
-    // 🔥 doble seguridad UX
-    if(!this.bonoActivo){
-      alert('Necesitas un bono activo');
-      return;
-    }
-
-    this.reservaService.crearReserva({
-      id_cliente: this.user.id_usuario,
-      id_horario: idHorario
-    }).subscribe({
-      next: () => {
-
-        // 🔥 reduce sesiones visualmente sin recargar
-        if(this.bonoActivo.sesiones_restantes !== null){
-          this.bonoActivo.sesiones_restantes--;
-        }
-
-        this.cargarReservas();
-
-        alert('Reserva realizada ✅');
-      },
-      error: err => {
-        alert(err.error?.error || 'No se pudo reservar');
-      }
-    });
-  }
-
-  // =====================
-  // RESERVAS
-  // =====================
-
+  // 🔥 RESERVAS
   cargarReservas() {
-
     this.reservaService
       .getReservasCliente(this.user.id_usuario)
       .subscribe({
-        next: data => this.reservas = data,
+        next: (data: any[]) => {
+          this.reservas = data;
+
+          // ⭐ CALCULO FUERA DEL HTML
+          this.reservasActivas = this.reservas
+            .filter(r => r.estado === 'activa')
+            .length;
+        },
+
         error: err => console.error(err)
       });
   }
 
-  async cancelar(reserva: any) {
+  cancelar(reserva: any) {
+    this.reservaService
+      .cancelarReserva(reserva.id_reserva)
+      .subscribe(() => {
+        // 🔥 SOLUCIÓN: Recargar todo después de cancelar
+        this.cargarReservas();
+        this.cargarBono();  // Por si cambió el número de sesiones
+      });
+  }
 
-    const alert = await this.alertCtrl.create({
-      header: 'Cancelar reserva',
-      message: '¿Seguro que deseas cancelar esta reserva?',
-      buttons: [
-        { text: 'No', role: 'cancel' },
-        {
-          text: 'Sí, cancelar',
-          handler: () => {
-
-            this.reservaService
-              .cancelarReserva(reserva.id_reserva)
-              .subscribe(() => {
-
-                
-                if(this.bonoActivo?.sesiones_restantes !== null){
-                  this.bonoActivo.sesiones_restantes++;
-                }
-
-                this.cargarReservas();
-              });
-
-          }
-        }
-      ]
-    });
-
-    await alert.present();
+  irComprarBono() {
+    this.router.navigate(['/bonos']);
   }
 }

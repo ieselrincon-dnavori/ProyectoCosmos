@@ -1,49 +1,65 @@
 services:
+
   postgres:
     image: postgres:16
-    container_name: postgres-db
+    container_name: cosmos-postgres
+    restart: unless-stopped
+
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
+
     ports:
       - "${POSTGRES_PORT}:5432"
+
+    # ❗ SIN volumen → DB efímera
+    # Solo init script
     volumes:
-    - postgres_data:/var/lib/postgresql/data
-    - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 10
 
+
   api:
     build: ./api
-    container_name: api-node
+    container_name: cosmos-api
+    restart: unless-stopped
+
     ports:
       - "${API_PORT}:3000"
+
     depends_on:
       postgres:
         condition: service_healthy
+
     environment:
       DB_HOST: postgres
       DB_USER: ${POSTGRES_USER}
       DB_PASS: ${POSTGRES_PASSWORD}
       DB_NAME: ${POSTGRES_DB}
+
     volumes:
       - ./api:/app
+      # volumen anónimo SOLO para node_modules
       - /app/node_modules
+
 
   ionic:
     build: ./ionic/app-ionic
-    container_name: ionic-app
+    container_name: cosmos-ionic
+    restart: unless-stopped
+
     ports:
       - "${IONIC_PORT}:8100"
+
     depends_on:
       - api
+
     volumes:
       - ./ionic/app-ionic:/app
       - /app/node_modules
-
-volumes:
-  postgres_data:

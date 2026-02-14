@@ -1,27 +1,568 @@
-#container {
+/* ========================================
+   Cosmos Fitness Theme - Variables
+======================================== */
+
+/* ========================================
+   Main Content Styles
+======================================== */
+.cosmos-dashboard {
+  --background: var(--bg-primary);
+  --color: var(--text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* ========================================
+   Dashboard Header with Logo
+======================================== */
+.dashboard-header {
+  margin-bottom: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  .logo-container {
+    text-align: center;
+    
+    .app-logo {
+      width: 160px;
+      height: auto;
+      filter: drop-shadow(0 2px 8px rgba(34, 150, 249, 0.2));
+    }
+  }
+
+  .header-text {
+    text-align: center;
+
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .header-subtitle {
+      font-size: 15px;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+  }
+}
+
+/* ========================================
+   Loading Container
+======================================== */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 0;
+
+  ion-spinner {
+    --color: var(--accent-blue);
+    transform: scale(1.5);
+  }
+}
+
+ion-content::part(scroll) {
+  padding: 16px;
+}
+
+
+/* ========================================
+   Bono Card (Main Feature Card)
+======================================== */
+.bono-card {
+  background: var(--accent-gradient);
+  border-radius: 18px;
+  border: none;
+  box-shadow: 0 8px 24px var(--shadow-strong);
+  margin: 0 0 24px 0;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px var(--shadow-strong);
+  }
+
+  ion-card-content {
+    padding: 28px;
+  }
+
+  .bono-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+
+    .bono-badge {
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.9);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .bono-icon {
+      ion-icon {
+        font-size: 28px;
+        color: rgba(255, 255, 255, 0.95);
+      }
+    }
+  }
+
+  .bono-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 24px 0;
+  }
+
+  .bono-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .bono-stat {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+
+      .stat-icon-wrapper {
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.25);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        ion-icon {
+          font-size: 22px;
+          color: #ffffff;
+        }
+      }
+
+      .stat-info {
+        display: flex;
+        flex-direction: column;
+
+        .stat-label {
+          font-size: 13px;
+          color: rgba(255, 255, 255, 0.85);
+          font-weight: 500;
+        }
+
+        .stat-value {
+          font-size: 18px;
+          font-weight: 700;
+          color: #ffffff;
+        }
+      }
+    }
+  }
+}
+
+/* Sin Bono State */
+.sin-bono {
   text-align: center;
+  padding: 40px 28px;
 
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  .empty-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    background: var(--accent-gradient);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    ion-icon {
+      font-size: 42px;
+      color: #ffffff;
+    }
+  }
+
+  h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+  }
+
+  p {
+    color: var(--text-secondary);
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
+  .btn-primary {
+    --background: var(--accent-gradient);
+    --background-hover: var(--accent-gradient-hover);
+    --color: #ffffff;
+    font-weight: 600;
+    font-size: 16px;
+    height: 48px;
+    text-transform: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px var(--shadow);
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px var(--shadow-strong);
+    }
+  }
 }
 
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
+/* ========================================
+   Stats Grid
+======================================== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+
+  .stat-card {
+    background-color: var(--bg-card);
+    border-radius: 14px;
+    padding: 20px;
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      border-color: var(--accent-blue);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px var(--shadow);
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, rgba(34, 150, 249, 0.1), rgba(77, 176, 255, 0.15));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+
+      ion-icon {
+        font-size: 24px;
+        color: var(--accent-blue);
+      }
+    }
+
+    .stat-content {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+
+      .stat-label {
+        font-size: 13px;
+        color: var(--text-secondary);
+        margin-bottom: 6px;
+      }
+
+      .stat-value {
+        font-size: 26px;
+        font-weight: 700;
+        color: var(--text-primary);
+      }
+    }
+  }
 }
 
-#container p {
-  font-size: 16px;
-  line-height: 22px;
+/* ========================================
+   Section Header
+======================================== */
+.section-header {
+  margin-bottom: 20px;
 
-  color: #8c8c8c;
-
-  margin: 0;
+  .section-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+  }
 }
 
-#container a {
-  text-decoration: none;
+/* ========================================
+   Reservas List
+======================================== */
+.reservas-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .reserva-card {
+    background-color: var(--bg-card);
+    border-radius: 14px;
+    border: 2px solid var(--border);
+    margin: 0;
+    transition: all 0.3s ease;
+
+    &:hover {
+      border-color: var(--accent-blue);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px var(--shadow);
+    }
+
+    ion-card-content {
+      padding: 24px;
+    }
+
+    .reserva-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+
+      .reserva-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+        flex: 1;
+      }
+
+      .estado-badge {
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+
+        &.badge-active {
+          background: rgba(40, 167, 69, 0.15);
+          color: var(--success);
+        }
+
+        &.badge-inactive {
+          background: rgba(108, 117, 125, 0.15);
+          color: var(--text-secondary);
+        }
+      }
+    }
+
+    .reserva-details {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+
+      .detail-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--text-secondary);
+        font-size: 15px;
+
+        ion-icon {
+          font-size: 20px;
+          color: var(--accent-blue);
+        }
+
+        span {
+          color: var(--text-primary);
+        }
+      }
+    }
+
+    .btn-cancel {
+      --border-color: var(--danger);
+      --color: var(--danger);
+      --background-hover: rgba(220, 53, 69, 0.1);
+      font-weight: 600;
+      font-size: 15px;
+      height: 44px;
+      text-transform: none;
+      border-radius: 10px;
+      transition: all 0.2s ease;
+      margin-top: 8px;
+
+      ion-icon {
+        font-size: 20px;
+      }
+    }
+  }
+}
+
+/* ========================================
+   Empty State
+======================================== */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-secondary);
+
+  ion-icon {
+    font-size: 80px;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+  }
+
+  h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+
+  p {
+    font-size: 15px;
+    color: var(--text-secondary);
+  }
+}
+
+/* ========================================
+   Responsive - Tablet
+======================================== */
+@media (max-width: 768px) {
+  .dashboard-header {
+    .logo-container {
+      .app-logo {
+        width: 140px;
+      }
+    }
+
+    .header-text {
+      h1 {
+        font-size: 24px;
+      }
+    }
+  }
+
+  .stats-grid {
+    gap: 12px;
+
+    .stat-card {
+      padding: 16px;
+
+      .stat-icon {
+        width: 42px;
+        height: 42px;
+
+        ion-icon {
+          font-size: 22px;
+        }
+      }
+
+      .stat-content {
+        .stat-value {
+          font-size: 22px;
+        }
+      }
+    }
+  }
+}
+
+/* ========================================
+   Responsive - Mobile
+======================================== */
+@media (max-width: 480px) {
+  .dashboard-header {
+    .logo-container {
+      .app-logo {
+        width: 120px;
+      }
+    }
+  }
+
+  .bono-card {
+    ion-card-content {
+      padding: 20px;
+    }
+
+    .bono-title {
+      font-size: 22px;
+    }
+
+    .bono-stats {
+      .bono-stat {
+        padding: 12px;
+
+        .stat-icon-wrapper {
+          width: 36px;
+          height: 36px;
+
+          ion-icon {
+            font-size: 20px;
+          }
+        }
+
+        .stat-info {
+          .stat-value {
+            font-size: 16px;
+          }
+        }
+      }
+    }
+  }
+
+  .stats-grid {
+    .stat-card {
+      .stat-content {
+        .stat-label {
+          font-size: 12px;
+        }
+
+        .stat-value {
+          font-size: 20px;
+        }
+      }
+    }
+  }
+
+  .reservas-list {
+    .reserva-card {
+      ion-card-content {
+        padding: 18px;
+      }
+
+      .reserva-header {
+        flex-direction: column;
+        gap: 12px;
+
+        .estado-badge {
+          align-self: flex-start;
+        }
+      }
+    }
+  }
+}
+
+/* ========================================
+   Ionic Component Overrides
+======================================== */
+ion-content {
+  --background: var(--bg-primary);
+  --color: var(--text-primary);
+}
+
+ion-card {
+  --background: var(--bg-card);
+  --color: var(--text-primary);
+}
+
+ion-button {
+  --border-radius: 10px;
+  font-family: inherit;
+}
+
+ion-badge {
+  font-family: inherit;
+}
+
+ion-spinner {
+  --color: var(--accent-blue);
 }

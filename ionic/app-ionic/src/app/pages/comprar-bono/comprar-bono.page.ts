@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { BonoService } from '../../services/bono';
 import { AuthService } from '../../services/auth.service';
 import { ToastController, LoadingController } from '@ionic/angular';
+import { UserStateService } from '../../services/user-state.service';
+
 
 @Component({
   selector: 'app-comprar-bono',
@@ -20,7 +22,8 @@ export class ComprarBonoPage implements OnInit {
     private bonoService:BonoService,
     private auth:AuthService,
     private toast:ToastController,
-    private loading:LoadingController
+    private loading:LoadingController,
+    private userState: UserStateService
   ) {}
 
   ngOnInit() {
@@ -47,33 +50,40 @@ export class ComprarBonoPage implements OnInit {
       metodo_pago:'app'
     };
 
-    this.bonoService.comprarBono(data).subscribe(async ()=>{
+    this.bonoService.comprarBono(data).subscribe({
 
-      load.dismiss();
+  next: async () => {
 
-      const t = await this.toast.create({
-        message:'✅ Bono activado',
-        duration:2000,
-        color:'success'
-      });
+    await load.dismiss();
 
-      t.present();
+    this.userState.refreshBono(); // 🔥 refresh global
 
-      this.router.navigate(['/mi-bono']);
-
-    }, async ()=>{
-
-      load.dismiss();
-
-      const t = await this.toast.create({
-        message:'Error en el pago',
-        duration:2000,
-        color:'danger'
-      });
-
-      t.present();
-
+    const t = await this.toast.create({
+      message:'✅ Bono activado',
+      duration:2000,
+      color:'success'
     });
+
+    await t.present();
+
+    this.router.navigate(['/mi-bono']);
+  },
+
+  error: async () => {
+
+    await load.dismiss();
+
+    const t = await this.toast.create({
+      message:'Error en el pago',
+      duration:2000,
+      color:'danger'
+    });
+
+    await t.present();
+  }
+
+});
+
 
   }
 

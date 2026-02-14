@@ -1,0 +1,225 @@
+/* Import shared variables */
+
+
+/* ========================================
+   Header Toolbar
+======================================== */
+.custom-toolbar {
+  --background: var(--accent-gradient);
+  --color: #ffffff;
+  
+  .header-logo {
+    height: 32px;
+    width: auto;
+    vertical-align: middle;
+    filter: brightness(0) invert(1);
+  }
+
+  ion-back-button {
+    --color: #ffffff;
+  }
+}
+
+/* ========================================
+   Page Content
+======================================== */
+.cosmos-page {
+  --background: var(--bg-secondary);
+}
+
+/* ========================================
+   Page Header
+======================================== */
+.page-header {
+  text-align: center;
+  margin-bottom: 32px;
+  padding-top: 20px;
+
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+}
+
+/* ========================================
+   Bonos Grid
+======================================== */
+.bonos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ========================================
+   Bono Plan Card
+======================================== */
+.bono-plan-card {
+  position: relative;
+  background: var(--bg-card);
+  border-radius: 16px;
+  border: 2px solid var(--border);
+  margin: 0;
+  transition: all 0.3s ease;
+  overflow: visible;
+
+  &:hover {
+    border-color: var(--accent-blue);
+    transform: translateY(-5px);
+    box-shadow: 0 12px 32px var(--shadow-strong);
+  }
+
+  .plan-badge {
+    position: absolute;
+    top: -12px;
+    right: 20px;
+    background: var(--accent-gradient);
+    color: #ffffff;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 4px 12px var(--shadow);
+    z-index: 10;
+
+    ion-icon {
+      font-size: 14px;
+    }
+  }
+
+  ion-card-header {
+    padding: 28px 24px 16px;
+
+    .plan-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-align: center;
+    }
+  }
+
+  ion-card-content {
+    padding: 0 24px 28px;
+
+    .price-container {
+      text-align: center;
+      margin-bottom: 20px;
+      padding: 20px 0;
+      background: linear-gradient(135deg, rgba(34, 150, 249, 0.08), rgba(77, 176, 255, 0.12));
+      border-radius: 12px;
+
+      .price {
+        font-size: 42px;
+        font-weight: 700;
+        color: var(--accent-blue);
+        display: block;
+      }
+    }
+
+    .plan-description {
+      color: var(--text-secondary);
+      font-size: 15px;
+      line-height: 1.6;
+      text-align: center;
+      margin-bottom: 24px;
+      min-height: 48px;
+    }
+
+    .plan-features {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+
+      .feature-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--text-primary);
+        font-size: 15px;
+
+        ion-icon {
+          font-size: 22px;
+          color: var(--accent-blue);
+          flex-shrink: 0;
+        }
+      }
+    }
+
+    .btn-buy {
+      --background: var(--accent-gradient);
+      --background-hover: var(--accent-gradient);
+      --color: #ffffff;
+      font-weight: 600;
+      font-size: 16px;
+      height: 48px;
+      text-transform: none;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px var(--shadow);
+      transition: all 0.2s ease;
+      margin-top: 8px;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px var(--shadow-strong);
+      }
+
+      ion-icon {
+        font-size: 20px;
+      }
+    }
+  }
+}
+
+/* ========================================
+   Responsive - Tablet
+======================================== */
+@media (max-width: 768px) {
+  .bonos-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-header {
+    h1 {
+      font-size: 24px;
+    }
+  }
+}
+
+/* ========================================
+   Responsive - Mobile
+======================================== */
+@media (max-width: 480px) {
+  .bono-plan-card {
+    ion-card-header {
+      padding: 24px 20px 12px;
+
+      .plan-title {
+        font-size: 20px;
+      }
+    }
+
+    ion-card-content {
+      padding: 0 20px 24px;
+
+      .price-container {
+        .price {
+          font-size: 36px;
+        }
+      }
+    }
+  }
+}

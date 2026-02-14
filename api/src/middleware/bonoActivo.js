@@ -5,17 +5,22 @@ module.exports = async function bonoActivo(req, res, next) {
 
   try {
 
-    const idCliente = req.body.id_cliente;
+    // 🔥 buscamos el id en TODOS los sitios posibles
+    const idCliente =
+      req.body.id_cliente ||
+      req.query.id_cliente ||
+      req.params.id_cliente ||
+      req.headers['x-user-id'];
 
     if (!idCliente) {
       return res.status(400).json({
-        error: 'Falta id_cliente'
+        error: 'No se pudo identificar al usuario'
       });
     }
 
     const hoy = new Date();
 
-    // 🔥 1️⃣ Buscar bonos de SESIONES primero
+    // ✅ BONO DE SESIONES
     let pago = await Pago.findOne({
       where: {
         id_cliente: idCliente,
@@ -24,10 +29,10 @@ module.exports = async function bonoActivo(req, res, next) {
         }
       },
       include: [BonoPlan],
-      order: [['fecha_pago', 'ASC']] // consume el más antiguo
+      order: [['fecha_pago', 'ASC']]
     });
 
-    // 🔥 2️⃣ Si no hay sesiones → buscar ilimitado activo
+    // ✅ BONO ILIMITADO
     if (!pago) {
 
       pago = await Pago.findOne({
@@ -49,15 +54,16 @@ module.exports = async function bonoActivo(req, res, next) {
       });
     }
 
-    // 👉 lo guardamos para el router de reservas
     req.bono = pago;
 
     next();
 
   } catch (err) {
 
+    console.error("🔥 ERROR middleware bonoActivo:", err);
+
     res.status(500).json({
-      error: err.message
+      error: 'Error verificando bono'
     });
 
   }

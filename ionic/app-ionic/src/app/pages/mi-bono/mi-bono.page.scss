@@ -1,0 +1,286 @@
+/* Import shared variables */
+
+
+/* ========================================
+   Header Toolbar
+======================================== */
+.custom-toolbar {
+  --background: var(--accent-gradient);
+  --color: #ffffff;
+  
+  .header-logo {
+    height: 32px;
+    width: auto;
+    vertical-align: middle;
+    filter: brightness(0) invert(1);
+  }
+
+  ion-back-button {
+    --color: #ffffff;
+  }
+}
+
+/* ========================================
+   Page Content
+======================================== */
+.cosmos-page {
+  --background: var(--bg-secondary);
+}
+
+/* ========================================
+   Page Header
+======================================== */
+.page-header {
+  text-align: center;
+  margin-bottom: 32px;
+  padding-top: 20px;
+
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+}
+
+/* ========================================
+   Bono Activo Card
+======================================== */
+.bono-activo-card {
+  max-width: 600px;
+  margin: 0 auto;
+  border-radius: 18px;
+  border: none;
+  overflow: hidden;
+  box-shadow: 0 8px 24px var(--shadow);
+
+  .card-header-gradient {
+    background: var(--accent-gradient);
+    padding: 24px;
+    text-align: center;
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.25);
+      color: #ffffff;
+      padding: 10px 20px;
+      border-radius: 24px;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      backdrop-filter: blur(10px);
+
+      ion-icon {
+        font-size: 20px;
+      }
+    }
+  }
+
+  ion-card-content {
+    padding: 32px 28px;
+    background: var(--bg-card);
+
+    .bono-tipo {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .bono-info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+
+      .info-card {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 20px;
+        background: var(--bg-secondary);
+        border-radius: 14px;
+        border: 2px solid var(--border);
+        transition: all 0.3s ease;
+
+        &:hover {
+          border-color: var(--accent-blue);
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .info-icon {
+          width: 48px;
+          height: 48px;
+          background: linear-gradient(135deg, rgba(34, 150, 249, 0.1), rgba(77, 176, 255, 0.15));
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+
+          ion-icon {
+            font-size: 26px;
+            color: var(--accent-blue);
+          }
+        }
+
+        .info-content {
+          display: flex;
+          flex-direction: column;
+
+          .info-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+          }
+
+          .info-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+          }
+        }
+      }
+    }
+
+    .action-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+
+      .btn-reservar {
+        --background: var(--accent-gradient);
+        --color: #ffffff;
+        font-weight: 600;
+        font-size: 16px;
+        height: 50px;
+        text-transform: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px var(--shadow);
+        transition: all 0.2s ease;
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 16px var(--shadow-strong);
+        }
+
+        ion-icon {
+          font-size: 22px;
+        }
+      }
+    }
+  }
+}
+
+/* ========================================
+   Sin Bono Card
+======================================== */
+.sin-bono-card {
+  max-width: 500px;
+  margin: 40px auto;
+  border-radius: 18px;
+  border: 2px solid var(--border);
+  background: var(--bg-card);
+
+  ion-card-content {
+    padding: 48px 32px;
+    text-align: center;
+
+    .empty-icon {
+      width: 90px;
+      height: 90px;
+      margin: 0 auto 24px;
+      background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 193, 7, 0.2));
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      ion-icon {
+        font-size: 48px;
+        color: var(--warning);
+      }
+    }
+
+    h2 {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+    }
+
+    p {
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+
+    .btn-comprar {
+      --background: var(--accent-gradient);
+      --color: #ffffff;
+      font-weight: 600;
+      font-size: 16px;
+      height: 50px;
+      text-transform: none;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px var(--shadow);
+      transition: all 0.2s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px var(--shadow-strong);
+      }
+
+      ion-icon {
+        font-size: 22px;
+      }
+    }
+  }
+}
+
+/* ========================================
+   Responsive - Mobile
+======================================== */
+@media (max-width: 640px) {
+  .page-header {
+    h1 {
+      font-size: 24px;
+    }
+  }
+
+  .bono-activo-card {
+    ion-card-content {
+      padding: 24px 20px;
+
+      .bono-tipo {
+        font-size: 22px;
+      }
+
+      .bono-info-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+
+  .sin-bono-card {
+    ion-card-content {
+      padding: 32px 24px;
+
+      h2 {
+        font-size: 20px;
+      }
+    }
+  }
+}

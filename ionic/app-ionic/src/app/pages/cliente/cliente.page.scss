@@ -1,0 +1,155 @@
+/* ========================================
+   Page Content
+======================================== */
+
+custom-toolbar {
+  --background: var(--accent-gradient) !important;
+  --color: #ffffff;
+  --border-width: 0;
+}
+
+.custom-toolbar ion-title {
+  text-align: center;
+}
+
+.custom-toolbar .header-logo {
+  height: 34px;
+  filter: brightness(0) invert(1);
+}
+
+
+.cosmos-page {
+  --background: var(--bg-primary);
+  --color: var(--text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* ========================================
+   Header
+======================================== */
+.page-header {
+  margin-bottom: 32px;
+  text-align: center;
+
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+
+  .subtitle {
+    color: var(--text-secondary);
+  }
+}
+
+/* ========================================
+   Loading
+======================================== */
+.loading-container {
+  display:flex;
+  justify-content:center;
+  padding:40px;
+}
+
+/* ========================================
+   Bono Activo
+======================================== */
+.bono-activo-card {
+  border-radius: 18px;
+  border: none;
+  box-shadow: 0 8px 24px var(--shadow-strong);
+}
+
+/* ========================================
+   Grid Info
+======================================== */
+.bono-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.info-card {
+  background-color: var(--bg-card);
+  border-radius: 14px;
+  padding: 20px;
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.info-icon ion-icon {
+  font-size: 24px;
+  color: var(--accent-blue);
+}
+
+.info-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.info-value {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* ========================================
+   Section Header
+======================================== */
+.section-header {
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+/* ========================================
+   Cards (reservas + empty)
+======================================== */
+.sin-bono-card {
+  background-color: var(--bg-card);
+  border-radius: 14px;
+  border: 2px solid var(--border);
+}
+
+/* Empty icon */
+.empty-icon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 20px;
+  background: var(--accent-gradient);
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-icon ion-icon {
+  font-size: 42px;
+  color: #ffffff;
+}
+
+/* ========================================
+   Ionic Overrides
+======================================== */
+ion-card {
+  --background: var(--bg-card);
+}
+
+ion-button {
+  --border-radius: 10px;
+}
+
+ion-spinner {
+  --color: var(--accent-blue);
+}

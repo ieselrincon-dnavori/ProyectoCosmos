@@ -1,31 +1,72 @@
 <ion-header>
-  <ion-toolbar color="dark">
-    <ion-title>Confirmar compra</ion-title>
+  <ion-toolbar class="custom-toolbar">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/bonos"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      <img src="assets/logo-blanco.png" alt="Cosmos Fitness" class="header-logo">
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="ion-padding cosmos-page">
 
-  <ion-card>
+  <div class="page-header">
+    <h1>Confirmar compra</h1>
+    <p class="subtitle">Revisa los detalles de tu bono</p>
+  </div>
 
-    <ion-card-header>
-      <ion-card-title>
-        {{bono?.nombre_bono}}
-      </ion-card-title>
-    </ion-card-header>
+  <ion-card class="compra-card">
+
+    <div class="card-icon">
+      <ion-icon name="checkmark-circle"></ion-icon>
+    </div>
 
     <ion-card-content>
 
-      <h1>{{bono?.precio}}€</h1>
+      <h2 class="plan-name">{{bono?.nombre_bono}}</h2>
 
-      <p>{{bono?.descripcion}}</p>
+      <div class="price-display">
+        <span class="currency">€</span>
+        <span class="amount">{{bono?.precio}}</span>
+      </div>
+
+      <p class="plan-description">{{bono?.descripcion}}</p>
+
+      <div class="features-summary">
+        <div class="feature" *ngIf="bono?.num_sesiones">
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+          <span>{{bono?.num_sesiones}} sesiones incluidas</span>
+        </div>
+        <div class="feature" *ngIf="bono?.duracion_dias">
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+          <span>Válido por {{bono?.duracion_dias}} días</span>
+        </div>
+      </div>
+
+      <div class="payment-info">
+        <div class="info-row">
+          <span class="label">Subtotal</span>
+          <span class="value">{{bono?.precio}}€</span>
+        </div>
+        <div class="info-row total">
+          <span class="label">Total</span>
+          <span class="value">{{bono?.precio}}€</span>
+        </div>
+      </div>
 
       <ion-button
         expand="block"
-        color="success"
+        class="btn-confirm"
         (click)="confirmarCompra()">
-        Confirmar pago
+        <ion-icon slot="start" name="card-outline"></ion-icon>
+        Confirmar y pagar
       </ion-button>
+
+      <p class="security-note">
+        <ion-icon name="shield-checkmark-outline"></ion-icon>
+        Pago seguro y protegido
+      </p>
 
     </ion-card-content>
 

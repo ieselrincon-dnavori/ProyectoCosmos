@@ -1,42 +1,66 @@
 <ion-header>
-  <ion-toolbar color="dark">
-    <ion-title>Planes disponibles</ion-title>
+  <ion-toolbar class="custom-toolbar">
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      <img src="assets/logo-blanco.png" alt="Cosmos Fitness" class="header-logo">
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="ion-padding cosmos-page">
+  
+  <div class="page-header">
+    <h1>Planes disponibles</h1>
+    <p class="subtitle">Elige el bono que mejor se adapte a tus necesidades</p>
+  </div>
 
-  <ion-card *ngFor="let bono of bonos">
+  <div class="bonos-grid">
+    <ion-card *ngFor="let bono of bonos" class="bono-plan-card">
+      
+      <div class="plan-badge" *ngIf="bono.destacado">
+        <ion-icon name="star"></ion-icon>
+        Popular
+      </div>
 
-    <ion-card-header>
-      <ion-card-title>
-        {{bono.nombre_bono}}
-      </ion-card-title>
-    </ion-card-header>
+      <ion-card-header>
+        <ion-card-title class="plan-title">
+          {{bono.nombre_bono}}
+        </ion-card-title>
+      </ion-card-header>
 
-    <ion-card-content>
+      <ion-card-content>
+        
+        <div class="price-container">
+          <span class="price">{{bono.precio}}€</span>
+        </div>
 
-      <h1>{{bono.precio}}€</h1>
+        <p class="plan-description">{{bono.descripcion}}</p>
 
-      <p>{{bono.descripcion}}</p>
+        <div class="plan-features">
+          <div class="feature-item" *ngIf="bono.num_sesiones">
+            <ion-icon name="checkmark-circle"></ion-icon>
+            <span>{{bono.num_sesiones}} sesiones</span>
+          </div>
 
-      <p *ngIf="bono.num_sesiones">
-        🎟️ {{bono.num_sesiones}} sesiones
-      </p>
+          <div class="feature-item" *ngIf="bono.duracion_dias">
+            <ion-icon name="checkmark-circle"></ion-icon>
+            <span>Válido {{bono.duracion_dias}} días</span>
+          </div>
+        </div>
 
-      <p *ngIf="bono.duracion_dias">
-        📅 {{bono.duracion_dias}} días
-      </p>
+        <ion-button
+          expand="block"
+          class="btn-buy"
+          (click)="comprar(bono)">
+          <ion-icon slot="start" name="cart-outline"></ion-icon>
+          Comprar ahora
+        </ion-button>
 
-      <ion-button
-        expand="block"
-        color="primary"
-        (click)="comprar(bono)">
-        Comprar
-      </ion-button>
+      </ion-card-content>
 
-    </ion-card-content>
-
-  </ion-card>
+    </ion-card>
+  </div>
 
 </ion-content>

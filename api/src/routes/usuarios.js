@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { Usuario } = require("../database");
+const { Usuario, Pago, BonoPlan } = require("../database");
+const { Op } = require('sequelize');
 
 
 /* =========================
@@ -222,6 +223,50 @@ router.delete('/:id', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+
+
+
+
 });
 
+router.get('/:id/bono', async (req, res) => {
+
+  try {
+
+    const hoy = new Date();
+
+    const bono = await Pago.findOne({
+
+      where: {
+        id_cliente: req.params.id,
+        [Op.or]: [
+          { fecha_vencimiento: { [Op.gt]: hoy } },
+          { sesiones_restantes: { [Op.gt]: 0 } }
+        ]
+      },
+
+      include: [BonoPlan],
+      order: [['fecha_pago', 'DESC']]
+
+    });
+
+    if (!bono) {
+      return res.json(null);
+    }
+
+    res.json({
+      tipo: bono.BonoPlan.nombre_bono,
+      sesiones_restantes: bono.sesiones_restantes,
+      fecha_vencimiento: bono.fecha_vencimiento
+    });
+
+  } catch (err) {
+
+    res.status(500).json({
+      error: err.message
+    });
+
+  }
+
+});
 module.exports = router;

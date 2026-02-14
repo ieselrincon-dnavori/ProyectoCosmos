@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth-guard';
+import { BonoGuard } from './guards/bono.guard';
 
 
 
@@ -32,11 +33,11 @@ const routes: Routes = [
   },
 
   {
-    path: 'horarios',
-    loadChildren: () => import('./pages/horarios/horarios.module').then(m => m.HorariosPageModule),
-    canActivate: [AuthGuard],
-    data: { roles: ['cliente', 'profesor', 'admin'] } // accesible para todos
-  },
+  path: 'horarios',
+  loadChildren: () => import('./pages/horarios/horarios.module').then(m => m.HorariosPageModule),
+  canActivate: [AuthGuard, BonoGuard],
+  data: { roles: ['cliente', 'profesor', 'admin'] }
+},
 
   {
     path: '',

@@ -1,30 +1,91 @@
 <ion-app>
 
-  <ion-menu contentId="main-content">
+  <ion-menu contentId="main-content" type="reveal">
     <ion-header>
-      <ion-toolbar color="primary">
-        <ion-title>Cosmos Fitness</ion-title>
+      <ion-toolbar class="menu-toolbar">
+        <div class="menu-header">
+          <img src="assets/logo-blanco.png" alt="Cosmos Fitness" class="menu-logo">
+          <h1>Cosmos Fitness</h1>
+        </div>
       </ion-toolbar>
     </ion-header>
 
-    <ion-content>
-      <ion-list>
+    <ion-content class="menu-content">
 
-        <ion-item *ngFor="let item of menuItems" [routerLink]="item.url">
+      <!-- INDICADOR GLOBAL DE BONO -->
+      <ng-container *ngIf="bono$ | async as bono">
+
+        <!-- BONO ACTIVO -->
+        <ion-card 
+          *ngIf="bono; else sinBono"
+          class="bono-status-card active">
+
+          <ion-card-content>
+
+            <div class="status-header">
+              <ion-icon name="checkmark-circle"></ion-icon>
+              <strong>Bono activo</strong>
+            </div>
+
+            <p *ngIf="bono.sesiones_restantes !== null" class="bono-detail">
+              <ion-icon name="ticket-outline"></ion-icon>
+              {{ bono.sesiones_restantes }} sesiones restantes
+            </p>
+
+            <p *ngIf="bono.fecha_vencimiento" class="bono-detail">
+              <ion-icon name="calendar-outline"></ion-icon>
+              Vence: {{ bono.fecha_vencimiento | date:'dd/MM/yyyy' }}
+            </p>
+
+          </ion-card-content>
+        </ion-card>
+
+        <!-- SIN BONO -->
+        <ng-template #sinBono>
+
+          <ion-card class="bono-status-card inactive">
+            <ion-card-content>
+
+              <div class="status-header">
+                <ion-icon name="alert-circle"></ion-icon>
+                <strong>Sin bono activo</strong>
+              </div>
+
+              <ion-button
+                expand="block"
+                size="small"
+                routerLink="/bonos"
+                class="btn-comprar-menu">
+                <ion-icon slot="start" name="cart-outline"></ion-icon>
+                Comprar ahora
+              </ion-button>
+
+            </ion-card-content>
+          </ion-card>
+
+        </ng-template>
+
+      </ng-container>
+
+
+      <!-- MENÚ -->
+      <ion-list class="menu-list">
+
+        <ion-item *ngFor="let item of menuItems" [routerLink]="item.url" class="menu-item">
           <ion-icon [name]="item.icon" slot="start"></ion-icon>
           <ion-label>{{ item.title }}</ion-label>
         </ion-item>
 
-        <ion-item button color="danger" (click)="logout()">
+        <ion-item button class="menu-item logout" (click)="logout()">
           <ion-icon name="log-out-outline" slot="start"></ion-icon>
           <ion-label>Cerrar sesión</ion-label>
         </ion-item>
 
       </ion-list>
+
     </ion-content>
   </ion-menu>
 
-  <!-- AQUÍ EL CAMBIO -->
   <ion-router-outlet id="main-content"></ion-router-outlet>
 
 </ion-app>

@@ -1,58 +1,77 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Cosmos Fitness</ion-title>
+<ion-header class="ion-no-border">
+  <ion-toolbar class="transparent-toolbar">
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content class="login-content">
 
-  <div style="max-width: 400px; margin: auto; margin-top: 15vh;">
+  <div class="login-container">
 
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title>Iniciar sesión</ion-card-title>
-      </ion-card-header>
+    <div class="logo-section">
+      <img src="assets/logo-blanco.png" alt="Cosmos Fitness" class="login-logo">
+      <h1>Bienvenido</h1>
+      <p class="welcome-text">Inicia sesión para continuar</p>
+    </div>
 
+    <ion-card class="login-card">
+      
       <ion-card-content>
 
-        <ion-item>
-          <ion-label position="floating">Email</ion-label>
-          <ion-input
-            type="email"
-            [(ngModel)]="email"
-            required>
-          </ion-input>
-        </ion-item>
+        <div class="form-group">
+          <ion-label class="input-label">Email</ion-label>
+          <div class="input-wrapper">
+            <ion-icon name="mail-outline"></ion-icon>
+            <ion-input
+              type="email"
+              placeholder="tu@email.com"
+              [(ngModel)]="email"
+              required>
+            </ion-input>
+          </div>
+        </div>
 
-        <ion-item>
-          <ion-label position="floating">Contraseña</ion-label>
-          <ion-input
-            type="password"
-            [(ngModel)]="password"
-            required>
-          </ion-input>
-        </ion-item>
+        <div class="form-group">
+          <ion-label class="input-label">Contraseña</ion-label>
+          <div class="input-wrapper">
+            <ion-icon name="lock-closed-outline"></ion-icon>
+            <ion-input
+              type="password"
+              placeholder="••••••••"
+              [(ngModel)]="password"
+              required>
+            </ion-input>
+          </div>
+        </div>
 
         <!-- Mensaje de error -->
-        <ion-text color="danger" *ngIf="errorMsg">
-          <p style="margin-top: 10px;">{{ errorMsg }}</p>
-        </ion-text>
+        <div class="error-message" *ngIf="errorMsg">
+          <ion-icon name="alert-circle"></ion-icon>
+          <span>{{ errorMsg }}</span>
+        </div>
 
         <!-- Botón login -->
         <ion-button
           expand="block"
-          color="primary"
-          style="margin-top: 20px;"
+          class="btn-login"
           (click)="login()"
           [disabled]="loading">
 
           <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
-          <span *ngIf="!loading">Entrar</span>
+          <span *ngIf="!loading">Iniciar sesión</span>
 
         </ion-button>
 
+        <div class="forgot-password">
+          <a href="#">¿Olvidaste tu contraseña?</a>
+        </div>
+
       </ion-card-content>
+
     </ion-card>
+
+    <div class="register-section">
+      <p>¿No tienes cuenta? <a href="#">Regístrate aquí</a></p>
+    </div>
 
   </div>
 

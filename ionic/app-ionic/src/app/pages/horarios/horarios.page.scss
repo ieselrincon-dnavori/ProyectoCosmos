@@ -1,0 +1,251 @@
+/* Import shared variables */
+
+
+/* ========================================
+   Header Toolbar
+======================================== */
+.custom-toolbar {
+  --background: var(--accent-gradient);
+  --color: #ffffff;
+  
+  .header-logo {
+    height: 32px;
+    width: auto;
+    vertical-align: middle;
+    filter: brightness(0) invert(1);
+  }
+
+  ion-back-button {
+    --color: #ffffff;
+  }
+}
+
+/* ========================================
+   Page Content
+======================================== */
+.cosmos-page {
+  --background: var(--bg-secondary);
+}
+
+/* ========================================
+   Page Header
+======================================== */
+.page-header {
+  text-align: center;
+  margin-bottom: 32px;
+  padding-top: 20px;
+
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+}
+
+/* ========================================
+   Horarios List
+======================================== */
+.horarios-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* ========================================
+   Horario Card
+======================================== */
+.horario-card {
+  background: var(--bg-card);
+  border-radius: 14px;
+  border: 2px solid var(--border);
+  margin: 0;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: var(--accent-blue);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px var(--shadow);
+  }
+
+  ion-card-content {
+    padding: 24px;
+
+    .horario-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+      gap: 12px;
+
+      .clase-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--text-primary);
+        margin: 0;
+        flex: 1;
+      }
+
+      .plazas-badge {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 14px;
+        background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(40, 167, 69, 0.15));
+        color: var(--success);
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+        white-space: nowrap;
+
+        ion-icon {
+          font-size: 18px;
+        }
+
+        &.completo {
+          background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(220, 53, 69, 0.15));
+          color: var(--danger);
+        }
+      }
+    }
+
+    .horario-details {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 20px;
+
+      .detail-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 15px;
+        color: var(--text-primary);
+
+        ion-icon {
+          font-size: 20px;
+          color: var(--accent-blue);
+          flex-shrink: 0;
+        }
+      }
+    }
+
+    .btn-reservar {
+      font-weight: 600;
+      font-size: 15px;
+      height: 48px;
+      text-transform: none;
+      border-radius: 12px;
+      transition: all 0.2s ease;
+      margin-top: 8px;
+
+      ion-icon {
+        font-size: 22px;
+      }
+
+      &.btn-success {
+        --background: var(--accent-gradient);
+        --color: #ffffff;
+        box-shadow: 0 4px 12px var(--shadow);
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 16px var(--shadow-strong);
+        }
+      }
+
+      &.btn-disabled {
+        --background: var(--bg-secondary);
+        --color: var(--text-muted);
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+
+/* ========================================
+   Empty State
+======================================== */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  max-width: 500px;
+  margin: 40px auto;
+
+  ion-icon {
+    font-size: 80px;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+  }
+
+  h3 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+  }
+
+  p {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 28px;
+  }
+
+  .btn-primary {
+    --background: var(--accent-gradient);
+    --color: #ffffff;
+    font-weight: 600;
+    font-size: 16px;
+    height: 48px;
+    text-transform: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px var(--shadow);
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px var(--shadow-strong);
+    }
+
+    ion-icon {
+      font-size: 20px;
+      margin: 0;
+    }
+  }
+}
+
+/* ========================================
+   Responsive - Mobile
+======================================== */
+@media (max-width: 640px) {
+  .page-header {
+    h1 {
+      font-size: 24px;
+    }
+  }
+
+  .horario-card {
+    ion-card-content {
+      padding: 18px;
+
+      .horario-header {
+        flex-direction: column;
+        gap: 12px;
+
+        .plazas-badge {
+          align-self: flex-start;
+        }
+      }
+    }
+  }
+}

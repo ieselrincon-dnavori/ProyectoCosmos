@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { UserStateService } from '../../services/user-state.service';
 
 @Component({
   selector: 'app-login',
   standalone: false,
   templateUrl: './login.page.html',
+  styleUrls: ['./login.page.scss']
 })
 export class LoginPage {
 
@@ -17,7 +19,8 @@ export class LoginPage {
 
   constructor(
     private auth: AuthService,
-    private router: Router
+    private router: Router,
+    private userState: UserStateService  // 🔥 Añadido
   ) {}
 
   login() {
@@ -29,6 +32,12 @@ export class LoginPage {
         this.loading = false;
         this.auth.saveUser(user);
 
+        // 🔥 SOLUCIÓN: Cargar el bono ANTES de navegar si es cliente
+        if (user.rol === 'cliente') {
+          this.userState.loadBono();
+        }
+
+        // Navegar según el rol
         switch (user.rol) {
           case 'cliente':
             this.router.navigate(['/cliente']);

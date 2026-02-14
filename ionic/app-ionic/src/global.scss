@@ -35,3 +35,25 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import "@ionic/angular/css/palettes/dark.system.css";
+
+ion-toolbar {
+  --min-height: 64px;
+}
+/* ========================================
+   GLOBAL APP HEADER
+======================================== */
+
+ion-toolbar.custom-toolbar {
+  --background: var(--accent-gradient);
+  --color: #ffffff;
+  --border-width: 0;
+}
+
+ion-toolbar.custom-toolbar .header-logo {
+  height: 32px;
+  width: auto;
+  filter: brightness(0) invert(1);
+}
+ion-title {
+  text-align: center;
+}

@@ -1,50 +1,89 @@
 <ion-header>
-  <ion-toolbar color="dark">
-    <ion-title>Mi bono</ion-title>
+  <ion-toolbar class="custom-toolbar">
+    <ion-buttons slot="start">
+      <ion-menu-button color="light"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      <img src="assets/logo-blanco.png" alt="Cosmos Fitness" class="header-logo">
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="ion-padding cosmos-page">
 
-  <ion-card *ngIf="bono; else sinBono" color="success">
+  <div class="page-header">
+    <h1>Mi bono</h1>
+    <p class="subtitle">Gestiona tu bono activo</p>
+  </div>
 
-    <ion-card-header>
-      <ion-card-title>
-        Bono activo
-      </ion-card-title>
-    </ion-card-header>
+  <ng-container *ngIf="bono$ | async as bono; else sinBono">
 
-    <ion-card-content>
+    <ion-card class="bono-activo-card">
+      
+      <div class="card-header-gradient">
+        <div class="status-badge">
+          <ion-icon name="checkmark-circle"></ion-icon>
+          <span>BONO ACTIVO</span>
+        </div>
+      </div>
 
-      <h2>{{bono.bono}}</h2>
+      <ion-card-content>
+        
+        <h2 class="bono-tipo">{{bono.tipo}}</h2>
 
-      <p *ngIf="bono.sesiones_restantes">
-        Sesiones restantes:
-        {{bono.sesiones_restantes}}
-      </p>
+        <div class="bono-info-grid">
+          
+          <div class="info-card" *ngIf="bono.sesiones_restantes !== null">
+            <div class="info-icon">
+              <ion-icon name="ticket-outline"></ion-icon>
+            </div>
+            <div class="info-content">
+              <span class="info-label">Sesiones restantes</span>
+              <span class="info-value">{{bono.sesiones_restantes}}</span>
+            </div>
+          </div>
 
-      <p *ngIf="bono.vence">
-        Válido hasta:
-        {{bono.vence}}
-      </p>
+          <div class="info-card" *ngIf="bono.fecha_vencimiento">
+            <div class="info-icon">
+              <ion-icon name="calendar-outline"></ion-icon>
+            </div>
+            <div class="info-content">
+              <span class="info-label">Válido hasta</span>
+              <span class="info-value">{{bono.fecha_vencimiento | date:'dd/MM/yyyy'}}</span>
+            </div>
+          </div>
 
-    </ion-card-content>
+        </div>
 
-  </ion-card>
+        <div class="action-buttons">
+          <ion-button expand="block" routerLink="/horarios" class="btn-reservar">
+            <ion-icon slot="start" name="calendar"></ion-icon>
+            Ver horarios
+          </ion-button>
+        </div>
+
+      </ion-card-content>
+
+    </ion-card>
+
+  </ng-container>
 
   <ng-template #sinBono>
 
-    <ion-card color="warning">
-
-      <ion-card-header>
-        <ion-card-title>
-          No tienes bono activo
-        </ion-card-title>
-      </ion-card-header>
-
+    <ion-card class="sin-bono-card">
+      
       <ion-card-content>
+        
+        <div class="empty-icon">
+          <ion-icon name="alert-circle-outline"></ion-icon>
+        </div>
 
-        <ion-button routerLink="/bonos">
+        <h2>No tienes bono activo</h2>
+        
+        <p>Para acceder a las clases y servicios del gimnasio, necesitas activar un bono.</p>
+
+        <ion-button expand="block" routerLink="/bonos" class="btn-comprar">
+          <ion-icon slot="start" name="cart-outline"></ion-icon>
           Comprar bono
         </ion-button>
 

@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const { Horario, Clase, Usuario, Reserva } = require('../database');
+const bonoActivo = require('../middleware/bonoActivo');
 
 
 /* =========================
    GET /horarios
 ========================= */
-router.get('/', async (req, res) => {
+router.get('/', bonoActivo, async (req, res) => {
   try {
     const id_cliente = req.query.id_cliente;
 
