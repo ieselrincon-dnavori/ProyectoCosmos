@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { isStandalone, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -13,7 +13,8 @@ import { AdminPagosPage } from './admin-pagos.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    AdminPagosPageRoutingModule
+    AdminPagosPageRoutingModule,
+    
   ],
   declarations: [AdminPagosPage]
 })

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { HorarioService } from '../../services/horario.service';
+import { AdminService } from '../../services/admin.service';
+import { ModalController } from '@ionic/angular';
+import { AlumnosModalPage } from '../alumnos-modal/alumnos-modal.page';
 
 @Component({
   selector: 'app-admin-clases',
@@ -13,7 +15,8 @@ export class AdminClasesPage implements OnInit {
   loading = true;
 
   constructor(
-    private horarioService: HorarioService
+    private adminService: AdminService,
+    private modalCtrl: ModalController
   ) {}
 
   ngOnInit() {
@@ -22,14 +25,28 @@ export class AdminClasesPage implements OnInit {
 
   cargar() {
 
-    this.horarioService.getHorariosAdmin()
+    this.adminService
+      .getClasesAdmin()
       .subscribe(data => {
 
-        // 🔥 clases casi llenas arriba
-        this.horarios = data.sort((a,b) => b.inscritos - a.inscritos);
+        this.horarios = data.sort(
+          (a,b) => b.inscritos - a.inscritos
+        );
 
         this.loading = false;
       });
+  }
+
+  async verAlumnos(id:number) {
+
+    const modal = await this.modalCtrl.create({
+      component: AlumnosModalPage,
+      componentProps: {
+        idHorario: id
+      }
+    });
+
+    await modal.present();
   }
 
 }

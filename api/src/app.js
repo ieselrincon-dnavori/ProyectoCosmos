@@ -28,6 +28,7 @@ const reservasRouter = require('./routes/reservas');
 const bonosRouter = require('./routes/bonos');
 const pagosRouter = require('./routes/pagos');
 const adminRouter = require('./routes/admin');
+const adminClasesRouter = require('./routes/admin.clases');
 
 
 // 🔥 TODAS protegidas
@@ -37,6 +38,7 @@ app.use('/reservas', auth, reservasRouter);
 app.use('/bonos', auth, bonosRouter);
 app.use('/pagos', auth, pagosRouter);
 app.use('/admin', auth, adminRouter);
+app.use('/admin', auth, adminClasesRouter);
 
 
 

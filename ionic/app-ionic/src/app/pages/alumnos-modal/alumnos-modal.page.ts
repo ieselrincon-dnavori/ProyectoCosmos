@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { ReservaService } from '../../services/reserva.service';
+import { HorarioService } from '../../services/horario.service';
 
 @Component({
   selector: 'app-alumnos-modal',
@@ -8,29 +8,33 @@ import { ReservaService } from '../../services/reserva.service';
   styleUrls: ['./alumnos-modal.page.scss'],
   standalone:false
 })
-export class AlumnosModalPage {
+export class AlumnosModalPage implements OnInit {
 
-  @Input() reservas: any[] = [];
+  @Input() idHorario!: number;
+
+  alumnos:any[] = [];
+  loading = true;
 
   constructor(
     private modalCtrl: ModalController,
-    private reservaService: ReservaService
+    private horarioService: HorarioService
   ) {}
+
+  ngOnInit() {
+
+    this.horarioService
+      .getAlumnosHorario(this.idHorario)
+      .subscribe(data => {
+
+        this.alumnos = data;
+        this.loading = false;
+
+      });
+
+  }
 
   cerrar() {
     this.modalCtrl.dismiss();
   }
 
-  cancelar(reserva: any) {
-    this.reservaService
-      .forzarCancelacion(reserva.id_reserva)
-      .subscribe(() => {
-
-        // eliminar de la lista visualmente
-        this.reservas = this.reservas.filter(
-          r => r.id_reserva !== reserva.id_reserva
-        );
-
-      });
-  }
 }

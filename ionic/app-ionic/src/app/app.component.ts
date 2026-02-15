@@ -102,11 +102,19 @@ export class AppComponent implements OnInit {
 
     if (user.rol === 'admin') {
   this.menuItems = [
+    { title: 'Dashboard', url: '/admin', icon: 'analytics-outline' },
+
     { title: 'Usuarios', url: '/admin', icon: 'people-outline' },
+
     { title: 'Clases', url: '/admin-clases', icon: 'barbell-outline' },
+
+    // 🔥 NUEVO
+    { title: 'Crear clase', url: '/admin-crear-clase', icon: 'add-circle-outline' },
+
     { title: 'Pagos', url: '/admin-pagos', icon: 'card-outline' },
   ];
 }
+
   }
 
   logout() {

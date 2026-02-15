@@ -13,7 +13,6 @@ export class AdminPage implements OnInit {
 
   usuarios:any[] = [];
   dashboard:any = null;
-  loading = true;
 
   constructor(
     private usuarioService: UsuarioService,
@@ -22,16 +21,23 @@ export class AdminPage implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.cargarDashboard();
+
     this.cargarUsuarios();
+    this.cargarDashboard(); // 🔥 FALTABA ESTO
+
   }
 
   cargarDashboard() {
-    this.adminService.getDashboard()
+
+    this.adminService
+      .getDashboard()
       .subscribe(data => {
+
+        console.log("🔥 DASHBOARD:", data); // DEBUG
+
         this.dashboard = data;
-        this.loading = false;
       });
+
   }
 
   cargarUsuarios() {

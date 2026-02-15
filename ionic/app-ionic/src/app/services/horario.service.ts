@@ -49,6 +49,11 @@ export class HorarioService {
   );
 }
 
+getAlumnosHorario(id:number) {
+  return this.http.get<any[]>(
+    `http://localhost:3000/horarios/${id}/alumnos`
+  );
+}
 
   /* =========================
      CONTROL RESERVAS

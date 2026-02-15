@@ -1,41 +1,42 @@
 <ion-header>
-  <ion-toolbar color="primary">
+  <ion-toolbar color="dark">
     <ion-title>Alumnos inscritos</ion-title>
 
     <ion-buttons slot="end">
       <ion-button (click)="cerrar()">Cerrar</ion-button>
     </ion-buttons>
+
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content>
 
-  <ion-list *ngIf="reservas.length; else vacio">
+  <ion-spinner
+    *ngIf="loading"
+    style="display:block;margin:40px auto">
+  </ion-spinner>
 
-    <ion-item *ngFor="let r of reservas">
+  <ion-list *ngIf="!loading">
+
+    <ion-item *ngFor="let a of alumnos">
+
+      <ion-avatar slot="start">
+        <img src="https://i.pravatar.cc/150?img={{a.Usuario.id_usuario}}">
+      </ion-avatar>
 
       <ion-label>
         <h2>
-          {{ r.Usuario.nombre }}
-          {{ r.Usuario.apellidos }}
+          {{a.Usuario.nombre}}
+          {{a.Usuario.apellidos}}
         </h2>
-      </ion-label>
 
-      <ion-button
-        color="danger"
-        fill="outline"
-        (click)="cancelar(r)">
-        Cancelar
-      </ion-button>
+        <p>
+          {{a.Usuario.email}}
+        </p>
+      </ion-label>
 
     </ion-item>
 
   </ion-list>
-
-  <ng-template #vacio>
-    <ion-text color="medium">
-      No hay alumnos inscritos.
-    </ion-text>
-  </ng-template>
 
 </ion-content>

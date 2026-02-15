@@ -15,6 +15,15 @@
 
     <ion-item *ngFor="let h of horarios">
 
+      <ion-button
+  slot="end"
+  fill="outline"
+  (click)="verAlumnos(h.id_horario)">
+
+  Ver alumnos
+
+</ion-button>
+
       <ion-label>
 
         <h2>

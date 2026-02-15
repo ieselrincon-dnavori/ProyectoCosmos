@@ -1,0 +1,44 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-title>Nueva Clase</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-item>
+    <ion-input
+      placeholder="Nombre de la clase"
+      [(ngModel)]="clase.nombre_clase">
+    </ion-input>
+  </ion-item>
+
+  <ion-item>
+    <ion-select
+      placeholder="Profesor"
+      [(ngModel)]="clase.id_profesor">
+
+      <ion-select-option
+        *ngFor="let p of profesores"
+        [value]="p.id_usuario">
+
+        {{p.nombre}} {{p.apellidos}}
+
+      </ion-select-option>
+
+    </ion-select>
+  </ion-item>
+
+  <ion-item>
+    <ion-input
+      type="number"
+      placeholder="Capacidad"
+      [(ngModel)]="clase.capacidad_maxima">
+    </ion-input>
+  </ion-item>
+
+  <ion-button expand="block" (click)="crear()">
+    Crear clase
+  </ion-button>
+
+</ion-content>
