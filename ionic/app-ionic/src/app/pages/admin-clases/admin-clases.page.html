@@ -1,0 +1,57 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-title>Panel de Clases</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-spinner 
+    *ngIf="loading"
+    style="display:block;margin:40px auto">
+  </ion-spinner>
+
+  <ion-list *ngIf="!loading">
+
+    <ion-item *ngFor="let h of horarios">
+
+      <ion-label>
+
+        <h2>
+          {{h.clase}}
+        </h2>
+
+        <p>
+          👨‍🏫 {{h.profesor}}
+        </p>
+
+        <p>
+          📅 {{h.fecha}} — {{h.hora_inicio}}
+        </p>
+
+        <p>
+          👥 {{h.inscritos}} / {{h.capacidad}}
+        </p>
+
+      </ion-label>
+
+      <ion-chip
+        [color]="
+          h.estado === 'llena'
+          ? 'danger'
+          : h.estado === 'casi llena'
+          ? 'warning'
+          : 'success'
+        ">
+
+        <ion-label>
+          {{h.estado}}
+        </ion-label>
+
+      </ion-chip>
+
+    </ion-item>
+
+  </ion-list>
+
+</ion-content>

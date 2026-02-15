@@ -1,20 +1,24 @@
 const express = require('express');
 const router = express.Router();
+
 const { Pago, BonoPlan, Usuario } = require('../database');
 const { Op } = require('sequelize');
 
+const roles = require('../middleware/roles');
+
 
 /* =========================
-   GET /pagos (admin)
+   GET TODOS LOS PAGOS
+   SOLO ADMIN
 ========================= */
-router.get('/', async (req, res) => {
+router.get('/', roles('admin'), async (req, res) => {
   try {
 
     const pagos = await Pago.findAll({
       include: [
         {
           model: Usuario,
-          attributes: ['id_usuario', 'nombre', 'email']
+          attributes: ['id_usuario', 'nombre', 'apellidos', 'email']
         },
         {
           model: BonoPlan,
@@ -33,10 +37,20 @@ router.get('/', async (req, res) => {
 
 
 /* =========================
-   GET pagos de un cliente
+   GET PAGOS DE UN CLIENTE
+   Anti-IDOR
 ========================= */
 router.get('/cliente/:id', async (req, res) => {
   try {
+
+    if (
+      req.user.rol !== 'admin' &&
+      req.user.id !== Number(req.params.id)
+    ) {
+      return res.status(403).json({
+        error: 'No autorizado'
+      });
+    }
 
     const pagos = await Pago.findAll({
       where: { id_cliente: req.params.id },
@@ -58,30 +72,33 @@ router.get('/cliente/:id', async (req, res) => {
 router.get('/cliente/:id/activo', async (req, res) => {
   try {
 
+    if (
+      req.user.rol !== 'admin' &&
+      req.user.id !== Number(req.params.id)
+    ) {
+      return res.status(403).json({
+        error: 'No autorizado'
+      });
+    }
+
     const hoy = new Date();
     const id = req.params.id;
 
-    // sesiones primero
     let pago = await Pago.findOne({
       where: {
         id_cliente: id,
-        sesiones_restantes: {
-          [Op.gt]: 0
-        }
+        sesiones_restantes: { [Op.gt]: 0 }
       },
       include: [BonoPlan],
       order: [['fecha_pago', 'ASC']]
     });
 
-    // si no hay → ilimitado
     if (!pago) {
 
       pago = await Pago.findOne({
         where: {
           id_cliente: id,
-          fecha_vencimiento: {
-            [Op.gt]: hoy
-          }
+          fecha_vencimiento: { [Op.gt]: hoy }
         },
         include: [BonoPlan],
         order: [['fecha_vencimiento', 'ASC']]
@@ -106,11 +123,11 @@ router.get('/cliente/:id/activo', async (req, res) => {
 });
 
 
-
 /* =========================
    CREAR PAGO
+   SOLO ADMIN
 ========================= */
-router.post('/', async (req, res) => {
+router.post('/', roles('admin'), async (req, res) => {
   try {
 
     const { id_cliente, id_bono, metodo_pago } = req.body;
@@ -126,7 +143,6 @@ router.post('/', async (req, res) => {
     let fecha_vencimiento = null;
     let sesiones_restantes = null;
 
-    // bonos por duración
     if (bono.duracion_dias) {
       fecha_vencimiento = new Date();
       fecha_vencimiento.setDate(
@@ -134,7 +150,6 @@ router.post('/', async (req, res) => {
       );
     }
 
-    // bonos por sesiones
     if (bono.num_sesiones) {
       sesiones_restantes = bono.num_sesiones;
     }

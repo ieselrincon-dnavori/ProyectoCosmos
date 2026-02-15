@@ -101,12 +101,12 @@ export class AppComponent implements OnInit {
     }
 
     if (user.rol === 'admin') {
-      this.menuItems = [
-        { title: 'Usuarios', url: '/admin', icon: 'people-outline' },
-        { title: 'Clases', url: '/admin', icon: 'barbell-outline' },
-        { title: 'Pagos', url: '/admin', icon: 'card-outline' },
-      ];
-    }
+  this.menuItems = [
+    { title: 'Usuarios', url: '/admin', icon: 'people-outline' },
+    { title: 'Clases', url: '/admin-clases', icon: 'barbell-outline' },
+    { title: 'Pagos', url: '/admin-pagos', icon: 'card-outline' },
+  ];
+}
   }
 
   logout() {

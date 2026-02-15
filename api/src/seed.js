@@ -1,10 +1,24 @@
-const { Usuario, Clase, Horario, Reserva, BonoPlan } = require('./database');
+const bcrypt = require('bcrypt');
+const { Usuario, Clase, Horario, Reserva, BonoPlan, Pago } = require('./database');
+
+function randomDate(monthsBack = 6) {
+  const now = new Date();
+  const past = new Date();
+  past.setMonth(now.getMonth() - monthsBack);
+
+  return new Date(
+    past.getTime() + Math.random() * (now.getTime() - past.getTime())
+  );
+}
+
+async function hash(password) {
+  return bcrypt.hash(password, 10);
+}
 
 async function seed() {
 
-  console.log("🌱 Ejecutando seed PRO...");
+  console.log("🌱 Ejecutando SEED PRO+...");
 
-  // Evitar duplicados
   const usuariosExistentes = await Usuario.count();
   if (usuariosExistentes > 0) {
     console.log("🌱 Seed ya ejecutado");
@@ -13,68 +27,83 @@ async function seed() {
 
   /*
   ========================
-  USUARIOS
+  PASSWORD HASH GLOBAL
   ========================
   */
 
-  // Lista de nombres reales para generar un entorno de prueba verosímil
-  const dataClientes = [
-    { nombre: 'Javier', apellidos: 'García López', email: 'j.garcia@mail.com' },
-    { nombre: 'Lucía', apellidos: 'Sánchez Pérez', email: 'lucia.sanchez@mail.com' },
-    { nombre: 'Marcos', apellidos: 'Rodríguez Ruiz', email: 'm.rodriguez@mail.com' },
-    { nombre: 'Elena', apellidos: 'Martínez Castro', email: 'elena.mtz@mail.com' },
-    { nombre: 'Ricardo', apellidos: 'Gómez Ferri', email: 'r.gomez@mail.com' },
-    { nombre: 'Sofía', apellidos: 'Morales Soler', email: 'sofia.fitness@mail.com' },
-    { nombre: 'Diego', apellidos: 'Navarro Valls', email: 'd.navarro@mail.com' },
-    { nombre: 'Valeria', apellidos: 'Méndez Ortiz', email: 'v.mendez@mail.com' },
-    { nombre: 'Adrián', apellidos: 'Vázquez Gil', email: 'adrian.vazquez@mail.com' },
-    { nombre: 'Marta', apellidos: 'Ibáñez Beltrán', email: 'marta.ib@mail.com' },
-    { nombre: 'Raúl', apellidos: 'Cano Ramos', email: 'raul.cano@mail.com' },
-    { nombre: 'Isabel', apellidos: 'Torres Sanz', email: 'i.torres@mail.com' },
-    { nombre: 'Pablo', apellidos: 'Herrero León', email: 'p.herrero@mail.com' },
-    { nombre: 'Carmen', apellidos: 'Jiménez Nieto', email: 'c.jimenez@mail.com' },
-    { nombre: 'Hugo', apellidos: 'Pascual Vidal', email: 'h.pascual@mail.com' }
+  const pass123 = await hash("123");
+  const passAdmin = await hash("admin123");
+
+  /*
+  ========================
+  ADMIN
+  ========================
+  */
+
+  const admin = await Usuario.create({
+    nombre: 'Admin',
+    apellidos: 'Root',
+    email: 'admin@mail.com',
+    password_hash: passAdmin,
+    rol: 'admin',
+    activo: true
+  });
+
+  /*
+  ========================
+  PROFESORES (7)
+  ========================
+  */
+
+  const profesoresData = [
+    ['Ana','Yoga'],
+    ['Carlos','Crossfit'],
+    ['Laura','Pilates'],
+    ['Sergio','Spinning'],
+    ['Marta','HIIT'],
+    ['David','Boxeo'],
+    ['Elena','Zumba']
   ];
 
-  const clientes = dataClientes.map(c => ({
-    ...c,
-    password_hash: '123', // Contraseña unificada
-    telefono: '600000000',
-    rol: 'cliente',
-    fecha_registro: new Date(),
-    activo: true
-  }));
+  const profesores = [];
 
-  const usuariosCreados = await Usuario.bulkCreate([
-    {
-      nombre: 'Admin',
-      apellidos: 'Root',
-      email: 'admin@mail.com',
-      password_hash: 'admin123', // Se mantiene según instrucción
-      rol: 'admin',
-      activo: true
-    },
-    {
-      nombre: 'Ana',
-      apellidos: 'Yoga',
-      email: 'ana@mail.com',
-      password_hash: '123',
+  for (const [nombre, especialidad] of profesoresData) {
+
+    profesores.push(await Usuario.create({
+      nombre,
+      apellidos: especialidad,
+      email: `${nombre.toLowerCase()}@mail.com`,
+      password_hash: pass123,
       rol: 'profesor',
+      telefono: '600000000',
+      fecha_registro: randomDate(8),
       activo: true
-    },
-    {
-      nombre: 'Carlos',
-      apellidos: 'Crossfit',
-      email: 'carlos@mail.com',
-      password_hash: '123',
-      rol: 'profesor',
+    }));
+  }
+
+  /*
+  ========================
+  100 CLIENTES CON HISTORIA
+  ========================
+  */
+
+  const clientes = [];
+
+  for (let i = 1; i <= 100; i++) {
+
+    clientes.push(await Usuario.create({
+      nombre: `Cliente${i}`,
+      apellidos: `Apellido${i}`,
+      email: `cliente${i}@mail.com`,
+      password_hash: pass123,
+      telefono: '600000000',
+      rol: 'cliente',
+      fecha_registro: randomDate(10),
       activo: true
-    },
-    ...clientes
-  ]);
+    }));
+  }
 
-  console.log("✅ Usuarios creados con datos reales");
-
+  console.log("✅ Usuarios realistas creados");
 
   /*
   ========================
@@ -82,101 +111,138 @@ async function seed() {
   ========================
   */
 
-  const clases = await Clase.bulkCreate([
-    {
-      nombre_clase: 'Yoga',
-      descripcion: 'Sesión de Hatha Yoga para mejorar flexibilidad y reducir estrés.',
-      capacidad_maxima: 20,
-      id_profesor: 2
-    },
-    {
-      nombre_clase: 'CrossFit',
-      descripcion: 'Entrenamiento funcional de alta intensidad para fuerza y potencia.',
-      capacidad_maxima: 15,
-      id_profesor: 3
-    }
-  ]);
+  const nombresClases = [
+    'Yoga','CrossFit','Pilates','Spinning',
+    'HIIT','Boxeo','Zumba','Funcional','Core','Movilidad'
+  ];
 
-  console.log("✅ Clases creadas");
+  const clases = [];
 
+  for (let i = 0; i < nombresClases.length; i++) {
+
+    clases.push(await Clase.create({
+      nombre_clase: nombresClases[i],
+      descripcion: `Clase profesional de ${nombresClases[i]}`,
+      capacidad_maxima: 20 + Math.floor(Math.random() * 10),
+      id_profesor: profesores[i % profesores.length].id_usuario
+    }));
+  }
+
+  console.log("✅ Clases variadas creadas");
 
   /*
   ========================
-  HORARIOS
+  HORARIOS (últimos 3 meses + futuros)
   ========================
   */
 
-  const horarios = await Horario.bulkCreate([
-    {
-      id_clase: 1,
-      fecha: '2026-02-01',
-      hora_inicio: '09:00',
-      hora_fin: '10:00',
-      lugar: 'Sala A - Zen',
-      reservas_abiertas: true
-    },
-    {
-      id_clase: 2,
-      fecha: '2026-02-01',
+  const horarios = [];
+
+  for (let i = -90; i <= 30; i++) {
+
+    const fecha = new Date();
+    fecha.setDate(fecha.getDate() + i);
+
+    const claseRandom = clases[Math.floor(Math.random() * clases.length)];
+
+    horarios.push(await Horario.create({
+      id_clase: claseRandom.id_clase,
+      fecha,
       hora_inicio: '18:00',
       hora_fin: '19:00',
-      lugar: 'Box Principal',
-      reservas_abiertas: true
-    }
-  ]);
+      lugar: 'Sala Principal',
+      reservas_abiertas: i >= 0
+    }));
+  }
 
-  console.log("✅ Horarios creados");
-
+  console.log("✅ Historial de horarios creado");
 
   /*
   ========================
-  RESERVAS (Ejemplos)
+  BONOS
+  ========================
+  */
+
+  const bonos = await BonoPlan.bulkCreate([
+    {
+      nombre_bono: 'Mensual',
+      precio: 45,
+      duracion_dias: 30,
+      descripcion: 'Acceso ilimitado'
+    },
+    {
+      nombre_bono: '10 sesiones',
+      precio: 60,
+      num_sesiones: 10,
+      descripcion: 'Flexible'
+    },
+    {
+      nombre_bono: 'Anual',
+      precio: 420,
+      duracion_dias: 365,
+      descripcion: 'Plan premium'
+    }
+  ]);
+
+  console.log("✅ Planes creados");
+
+  /*
+  ========================
+  PAGOS ACTIVOS + HISTÓRICOS
+  ========================
+  */
+
+  for (const cliente of clientes) {
+
+    const plan = bonos[Math.floor(Math.random() * bonos.length)];
+
+    const fechaPago = randomDate(6);
+
+    await Pago.create({
+  id_cliente: cliente.id_usuario,
+  id_bono: plan.id_bono,
+  monto: plan.precio, // 🔥 ESTA ES LA CLAVE
+  fecha_pago: fechaPago,
+  fecha_vencimiento: new Date(
+    fechaPago.getTime() + (plan.duracion_dias || 60) * 86400000
+  ),
+  sesiones_restantes: plan.num_sesiones || 999
+});
+
+  }
+
+  console.log("✅ Bonos asignados");
+
+  /*
+  ========================
+  RESERVAS HISTÓRICAS
   ========================
   */
 
   const reservas = [];
-  // Asignamos a los primeros 8 clientes reales a la clase de Yoga
-  for (let i = 4; i <= 12; i++) {
+
+  for (let i = 0; i < 500; i++) {
+
+    const cliente =
+      clientes[Math.floor(Math.random() * clientes.length)];
+
+    const horario =
+      horarios[Math.floor(Math.random() * horarios.length)];
+
     reservas.push({
-      id_cliente: i,
-      id_horario: 1,
-      estado: 'activa'
+      id_cliente: cliente.id_usuario,
+      id_horario: horario.id_horario,
+      estado: horario.fecha < new Date()
+        ? 'completada'
+        : 'activa'
     });
   }
 
   await Reserva.bulkCreate(reservas);
-  console.log("✅ Reservas creadas");
 
-  /*
-  ========================
-  BONOS / PLANES
-  ========================
-  */
+  console.log("✅ Historial de reservas generado");
 
-  await BonoPlan.bulkCreate([
-    {
-      nombre_bono: 'Bono mensual',
-      precio: 40,
-      duracion_dias: 30,
-      descripcion: 'Acceso ilimitado durante 30 días'
-    },
-    {
-      nombre_bono: 'Bono 10 sesiones',
-      precio: 50,
-      num_sesiones: 10,
-      descripcion: '10 accesos al gimnasio sin caducidad mensual'
-    },
-    {
-      nombre_bono: 'Bono anual',
-      precio: 400,
-      duracion_dias: 365,
-      descripcion: 'Acceso ilimitado durante 1 año (Ahorro del 15%)'
-    }
-  ]);
-
-  console.log("✅ Bonos creados");
-  console.log("🔥 SEED PRO COMPLETADO");
-
+  console.log("🔥 SEED ULTRA PRO COMPLETADO");
 }
 
 module.exports = seed;

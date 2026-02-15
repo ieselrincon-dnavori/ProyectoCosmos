@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
 
   postgres:
@@ -13,9 +15,11 @@ services:
     ports:
       - "${POSTGRES_PORT}:5432"
 
-    # ❗ SIN volumen → DB efímera
-    # Solo init script
     volumes:
+      # 🔥 DB persistente (MUY IMPORTANTE)
+      - postgres_data:/var/lib/postgresql/data
+
+      # Script inicial SOLO primera vez
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
 
     healthcheck:
@@ -43,10 +47,12 @@ services:
       DB_PASS: ${POSTGRES_PASSWORD}
       DB_NAME: ${POSTGRES_DB}
 
+      # 🔥 MUY IMPORTANTE
+      JWT_SECRET: ${JWT_SECRET}
+
     volumes:
       - ./api:/app
-      # volumen anónimo SOLO para node_modules
-      - /app/node_modules
+      - api_node_modules:/app/node_modules
 
 
   ionic:
@@ -62,4 +68,13 @@ services:
 
     volumes:
       - ./ionic/app-ionic:/app
-      - /app/node_modules
+      - ionic_node_modules:/app/node_modules
+
+
+
+# 🔥 VOLUMENES NOMBRADOS (PRO)
+volumes:
+
+  postgres_data:
+  api_node_modules:
+  ionic_node_modules:

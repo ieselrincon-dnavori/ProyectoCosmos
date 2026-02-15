@@ -1,0 +1,57 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-title>Pagos</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <!-- LOADING -->
+  <ion-spinner
+    *ngIf="loading"
+    style="display:block;margin:40px auto">
+  </ion-spinner>
+
+
+  <!-- LISTA -->
+  <ion-list *ngIf="!loading">
+
+    <ion-item *ngFor="let pago of pagos">
+
+      <ion-label>
+
+        <h2>
+          {{pago.Usuario.nombre}}
+          {{pago.Usuario.apellidos}}
+        </h2>
+
+        <p>{{pago.Usuario.email}}</p>
+
+        <p>
+          <strong>{{pago.BonoPlan.nombre_bono}}</strong>
+          — {{pago.monto}}€
+        </p>
+
+        <p>
+          Fecha:
+          {{pago.fecha_pago | date:'short'}}
+        </p>
+
+      </ion-label>
+
+
+      <ion-chip
+        slot="end"
+        [color]="getEstadoColor(pago)">
+
+        <ion-label>
+          {{getEstadoTexto(pago)}}
+        </ion-label>
+
+      </ion-chip>
+
+    </ion-item>
+
+  </ion-list>
+
+</ion-content>

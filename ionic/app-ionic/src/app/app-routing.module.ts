@@ -26,11 +26,28 @@ const routes: Routes = [
   },
 
   {
-    path: 'admin',
-    loadChildren: () => import('./pages/admin/admin.module').then(m => m.AdminPageModule),
-    canActivate: [AuthGuard],
-    data: { roles: ['admin'] }
-  },
+  path: 'admin-pagos',
+  loadChildren: () => import('./pages/admin-pagos/admin-pagos.module')
+    .then(m => m.AdminPagosPageModule),
+  canActivate: [AuthGuard],
+  data: { roles: ['admin'] }
+},
+
+{
+  path: 'admin',
+  loadChildren: () => import('./pages/admin/admin.module')
+    .then(m => m.AdminPageModule),
+  canActivate: [AuthGuard],
+  data: { roles: ['admin'] }
+},
+
+{
+  path: 'admin-clases',
+  loadChildren: () => import('./pages/admin-clases/admin-clases.module')
+    .then(m => m.AdminClasesPageModule),
+  canActivate: [AuthGuard],
+  data: { roles: ['admin'] }
+},
 
   {
   path: 'horarios',
@@ -64,6 +81,14 @@ const routes: Routes = [
   {
     path: 'mi-bono',
     loadChildren: () => import('./pages/mi-bono/mi-bono.module').then( m => m.MiBonoPageModule)
+  },
+  {
+    path: 'admin-pagos',
+    loadChildren: () => import('./pages/admin-pagos/admin-pagos.module').then( m => m.AdminPagosPageModule)
+  },
+  {
+    path: 'admin-clases',
+    loadChildren: () => import('./pages/admin-clases/admin-clases.module').then( m => m.AdminClasesPageModule)
   }
 ];
 

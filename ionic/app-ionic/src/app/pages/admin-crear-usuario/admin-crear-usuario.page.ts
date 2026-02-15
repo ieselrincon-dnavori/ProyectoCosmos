@@ -27,7 +27,8 @@ export class AdminCrearUsuarioPage {
       return this.mostrarAlert('Faltan campos obligatorios');
     }
 
-    this.usuarioService.crearUsuario(this.usuario)
+    this.usuarioService.crearUsuarioAdmin(this.usuario)
+
       .subscribe({
         next: async () => {
 

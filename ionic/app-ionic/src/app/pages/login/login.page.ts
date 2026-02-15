@@ -28,30 +28,42 @@ export class LoginPage {
     this.errorMsg = '';
 
     this.auth.login(this.email, this.password).subscribe({
-      next: user => {
-        this.loading = false;
-        this.auth.saveUser(user);
+      
+      next: res => {
 
-        // 🔥 SOLUCIÓN: Cargar el bono ANTES de navegar si es cliente
-        if (user.rol === 'cliente') {
-          this.userState.loadBono();
-        }
+  this.loading = false;
 
-        // Navegar según el rol
-        switch (user.rol) {
-          case 'cliente':
-            this.router.navigate(['/cliente']);
-            break;
-          case 'profesor':
-            this.router.navigate(['/profesor']);
-            break;
-          case 'admin':
-            this.router.navigate(['/admin']);
-            break;
-          default:
-            this.router.navigate(['/home']);
-        }
-      },
+  // 🔥 GUARDAR TOKEN (CRÍTICO)
+  localStorage.setItem('token', res.token);
+
+  // guardar usuario REAL
+  this.auth.saveUser(res.user);
+
+  const user = res.user;
+
+  // cargar bono si cliente
+  if (user.rol === 'cliente') {
+    this.userState.loadBono();
+  }
+
+  switch (user.rol) {
+
+    case 'cliente':
+      this.router.navigate(['/cliente']);
+      break;
+
+    case 'profesor':
+      this.router.navigate(['/profesor']);
+      break;
+
+    case 'admin':
+      this.router.navigate(['/admin']);
+      break;
+
+    default:
+      this.router.navigate(['/login']); // 🔥 nunca home
+  }
+},
       error: err => {
         this.loading = false;
 
