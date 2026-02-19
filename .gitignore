@@ -21,4 +21,12 @@ Thumbs.db
 # IDE
 .vscode/
 .idea/
-
+# Capacitor Android
+android/.gradle/
+android/.idea/
+android/local.properties
+android/app/build/
+android/build/
+android/captures/
+android/*.keystore
+android/*.jks

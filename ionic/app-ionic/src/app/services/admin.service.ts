@@ -18,10 +18,6 @@ export class AdminService {
 
   constructor(private api: ApiService) {}
 
-  /* =========================
-     DASHBOARD (CACHEADO 🔥)
-  ========================= */
-
   dashboard$: Observable<Dashboard> =
     this.api
       .get<Dashboard>(`${this.base}/dashboard`)
@@ -31,16 +27,12 @@ export class AdminService {
     return this.dashboard$;
   }
 
-  /* ========================= */
-
   refreshDashboard() {
     this.dashboard$ =
       this.api
         .get<Dashboard>(`${this.base}/dashboard`)
         .pipe(shareReplay(1));
   }
-
-  /* ========================= */
 
   getProfesores(): Observable<any[]> {
     return this.api.get<any[]>(`${this.base}/profesores`);
@@ -53,9 +45,8 @@ export class AdminService {
   crearClase(data:any){
     return this.api.post(`${this.base}/clases`, data);
   }
+
   getIngresosChart(){
-  return this.api.get<any[]>('/admin/dashboard-chart');
-}
-
-
+    return this.api.get<any[]>(`${this.base}/dashboard-chart`);
+  }
 }

@@ -3,49 +3,71 @@
   <ion-content class="dashboard-content">
 
     <div class="dashboard-header">
-      <h1>Panel de Control</h1>
-      <p>Resumen general del gimnasio</p>
+
+  <div class="header-left">
+    <img src="assets/logo-blanco.png" class="dashboard-logo" />
+    <div>
+      <h1>Admin Overview</h1>
+      <p>Resumen general del gimnasio en tiempo real</p>
     </div>
+  </div>
+
+</div>
+
 
     <div class="cards-grid">
 
       <!-- CLIENTES -->
-      <div class="metric-card blue">
-        <div class="metric-header">
-          <span>Clientes activos</span>
+      <div class="metric-card glass blue">
+        <div class="metric-top">
+          <div>
+            <span class="metric-label">Clientes activos</span>
+            <h2>{{ d.clientes_activos }}</h2>
+          </div>
           <ion-icon name="people-outline"></ion-icon>
         </div>
-        <h2>{{ d.clientes_activos }}</h2>
+        <div class="growth positive">
+          ↑ +12% este mes
+        </div>
       </div>
 
       <!-- INGRESOS -->
-      <div class="metric-card green">
-        <div class="metric-header">
-          <span>Ingresos del mes</span>
+      <div class="metric-card glass green">
+        <div class="metric-top">
+          <div>
+            <span class="metric-label">Ingresos</span>
+            <h2>{{ d.ingresos_mes }}€</h2>
+          </div>
           <ion-icon name="cash-outline"></ion-icon>
         </div>
-        <h2>{{ d.ingresos_mes }}€</h2>
+        <div class="growth positive">
+          ↑ +8.4% este mes
+        </div>
       </div>
 
       <!-- CLASES -->
-      <div class="metric-card purple">
-        <div class="metric-header">
-          <span>Clases hoy</span>
-          <ion-icon name="fitness-outline"></ion-icon>
+      <div class="metric-card glass purple">
+        <div class="metric-top">
+          <div>
+            <span class="metric-label">Clases hoy</span>
+            <h2>{{ d.clases_hoy }}</h2>
+          </div>
+          <ion-icon name="barbell-outline"></ion-icon>
         </div>
-        <h2>{{ d.clases_hoy }}</h2>
       </div>
 
       <!-- OCUPACIÓN -->
-      <div class="metric-card orange">
-        <div class="metric-header">
-          <span>Ocupación media</span>
-          <ion-icon name="stats-chart-outline"></ion-icon>
+      <div class="metric-card glass orange">
+        <div class="metric-top">
+          <div>
+            <span class="metric-label">Ocupación media</span>
+            <h2>{{ d.ocupacion_media }}%</h2>
+          </div>
+          <ion-icon name="analytics-outline"></ion-icon>
         </div>
-        <h2>{{ d.ocupacion_media }}%</h2>
 
         <div class="progress-bar">
-          <div 
+          <div
             class="progress-fill"
             [style.width.%]="d.ocupacion_media">
           </div>
@@ -59,10 +81,7 @@
 </ng-container>
 
 <ng-template #loading>
-  <ion-content>
-    <ion-spinner
-      name="crescent"
-      style="display:block;margin:40px auto">
-    </ion-spinner>
+  <ion-content class="dashboard-content">
+    <ion-spinner name="crescent" class="loading-spinner"></ion-spinner>
   </ion-content>
 </ng-template>

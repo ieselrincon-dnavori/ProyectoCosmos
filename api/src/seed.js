@@ -17,19 +17,13 @@ async function hash(password) {
 
 async function seed() {
 
-  console.log("🌱 Ejecutando SEED PRO+...");
+  console.log("🌱 Ejecutando SEED ULTRA PRO...");
 
   const usuariosExistentes = await Usuario.count();
   if (usuariosExistentes > 0) {
     console.log("🌱 Seed ya ejecutado");
     return;
   }
-
-  /*
-  ========================
-  PASSWORD HASH GLOBAL
-  ========================
-  */
 
   const pass123 = await hash("123");
   const passAdmin = await hash("admin123");
@@ -40,7 +34,7 @@ async function seed() {
   ========================
   */
 
-  const admin = await Usuario.create({
+  await Usuario.create({
     nombre: 'Admin',
     apellidos: 'Root',
     email: 'admin@mail.com',
@@ -51,7 +45,7 @@ async function seed() {
 
   /*
   ========================
-  PROFESORES (7)
+  PROFESORES
   ========================
   */
 
@@ -68,7 +62,6 @@ async function seed() {
   const profesores = [];
 
   for (const [nombre, especialidad] of profesoresData) {
-
     profesores.push(await Usuario.create({
       nombre,
       apellidos: especialidad,
@@ -76,21 +69,20 @@ async function seed() {
       password_hash: pass123,
       rol: 'profesor',
       telefono: '600000000',
-      fecha_registro: randomDate(8),
+      fecha_registro: randomDate(12),
       activo: true
     }));
   }
 
   /*
   ========================
-  100 CLIENTES CON HISTORIA
+  CLIENTES (150 + crecimiento)
   ========================
   */
 
   const clientes = [];
 
   for (let i = 1; i <= 100; i++) {
-
     clientes.push(await Usuario.create({
       nombre: `Cliente${i}`,
       apellidos: `Apellido${i}`,
@@ -103,7 +95,21 @@ async function seed() {
     }));
   }
 
-  console.log("✅ Usuarios realistas creados");
+  // Crecimiento últimos 3 meses
+  for (let i = 0; i < 50; i++) {
+    clientes.push(await Usuario.create({
+      nombre: `Nuevo${i}`,
+      apellidos: `Cliente${i}`,
+      email: `nuevo${i}@mail.com`,
+      password_hash: pass123,
+      telefono: '600000000',
+      rol: 'cliente',
+      fecha_registro: randomDate(3),
+      activo: true
+    }));
+  }
+
+  console.log("✅ Clientes generados con crecimiento realista");
 
   /*
   ========================
@@ -119,27 +125,25 @@ async function seed() {
   const clases = [];
 
   for (let i = 0; i < nombresClases.length; i++) {
-
     clases.push(await Clase.create({
       nombre_clase: nombresClases[i],
       descripcion: `Clase profesional de ${nombresClases[i]}`,
-      capacidad_maxima: 20 + Math.floor(Math.random() * 10),
+      capacidad_maxima: 20 + Math.floor(Math.random() * 15),
       id_profesor: profesores[i % profesores.length].id_usuario
     }));
   }
 
-  console.log("✅ Clases variadas creadas");
+  console.log("✅ Clases creadas");
 
   /*
   ========================
-  HORARIOS (últimos 3 meses + futuros)
+  HORARIOS (90 días atrás + 30 futuros)
   ========================
   */
 
   const horarios = [];
 
   for (let i = -90; i <= 30; i++) {
-
     const fecha = new Date();
     fecha.setDate(fecha.getDate() + i);
 
@@ -155,7 +159,7 @@ async function seed() {
     }));
   }
 
-  console.log("✅ Historial de horarios creado");
+  console.log("✅ Historial de horarios generado");
 
   /*
   ========================
@@ -177,70 +181,85 @@ async function seed() {
       descripcion: 'Flexible'
     },
     {
-      nombre_bono: 'Anual',
-      precio: 420,
-      duracion_dias: 365,
-      descripcion: 'Plan premium'
+      nombre_bono: 'Pase diario',
+      precio: 8,
+      duracion_dias: 1,
+      descripcion: 'Plan casual'
     }
   ]);
 
-  console.log("✅ Planes creados");
+  console.log("✅ Bonos creados");
 
   /*
   ========================
-  PAGOS ACTIVOS + HISTÓRICOS
+  PAGOS (12 meses históricos)
   ========================
   */
 
+  const pagos = [];
+
   for (const cliente of clientes) {
 
-    const plan = bonos[Math.floor(Math.random() * bonos.length)];
+    const numPagos = 1 + Math.floor(Math.random() * 4);
 
-    const fechaPago = randomDate(6);
+    for (let i = 0; i < numPagos; i++) {
 
-    await Pago.create({
-  id_cliente: cliente.id_usuario,
-  id_bono: plan.id_bono,
-  monto: plan.precio, // 🔥 ESTA ES LA CLAVE
-  fecha_pago: fechaPago,
-  fecha_vencimiento: new Date(
-    fechaPago.getTime() + (plan.duracion_dias || 60) * 86400000
-  ),
-  sesiones_restantes: plan.num_sesiones || 999
-});
+      const plan = bonos[Math.floor(Math.random() * bonos.length)];
+      const fechaPago = randomDate(12);
 
+      pagos.push({
+        id_cliente: cliente.id_usuario,
+        id_bono: plan.id_bono,
+        monto: plan.precio,
+        fecha_pago: fechaPago,
+        fecha_vencimiento: new Date(
+          fechaPago.getTime() + (plan.duracion_dias || 60) * 86400000
+        ),
+        sesiones_restantes: plan.num_sesiones || 999
+      });
+    }
   }
 
-  console.log("✅ Bonos asignados");
+  await Pago.bulkCreate(pagos);
+
+  console.log("✅ Historial financiero avanzado generado");
 
   /*
   ========================
-  RESERVAS HISTÓRICAS
+  RESERVAS CON OCUPACIÓN REAL
   ========================
   */
 
   const reservas = [];
 
-  for (let i = 0; i < 500; i++) {
+  for (const horario of horarios) {
 
-    const cliente =
-      clientes[Math.floor(Math.random() * clientes.length)];
+    const clase = clases.find(c => c.id_clase === horario.id_clase);
+    const capacidad = clase.capacidad_maxima;
 
-    const horario =
-      horarios[Math.floor(Math.random() * horarios.length)];
+    const ocupacion =
+      horario.fecha < new Date()
+        ? Math.floor(capacidad * (0.4 + Math.random() * 0.6))
+        : Math.floor(capacidad * Math.random() * 0.7);
 
-    reservas.push({
-      id_cliente: cliente.id_usuario,
-      id_horario: horario.id_horario,
-      estado: horario.fecha < new Date()
-        ? 'completada'
-        : 'activa'
-    });
+    for (let i = 0; i < ocupacion; i++) {
+
+      const cliente =
+        clientes[Math.floor(Math.random() * clientes.length)];
+
+      reservas.push({
+        id_cliente: cliente.id_usuario,
+        id_horario: horario.id_horario,
+        estado: horario.fecha < new Date()
+          ? 'completada'
+          : 'activa'
+      });
+    }
   }
 
   await Reserva.bulkCreate(reservas);
 
-  console.log("✅ Historial de reservas generado");
+  console.log("✅ Ocupación realista generada");
 
   console.log("🔥 SEED ULTRA PRO COMPLETADO");
 }

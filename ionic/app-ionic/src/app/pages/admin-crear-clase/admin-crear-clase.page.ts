@@ -12,10 +12,14 @@ export class AdminCrearClasePage implements OnInit {
   profesores:any[] = [];
 
   clase = {
-    nombre_clase: '',
-    id_profesor: null,
-    capacidad_maxima: 10
-  };
+  nombre_clase: '',
+  id_profesor: null,
+  capacidad_maxima: 10,
+  fecha: '',
+  hora_inicio: '',
+  reservas_abiertas: true
+};
+
 
   constructor(
     private adminService: AdminService,
@@ -39,5 +43,6 @@ export class AdminCrearClasePage implements OnInit {
       });
 
   }
+  
 
 }

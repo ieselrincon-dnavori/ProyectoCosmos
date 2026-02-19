@@ -10,10 +10,26 @@ const auth = require('./middleware/auth');
 
 const app = express();
 
+const allowedOrigins = [
+  'http://localhost:8100',
+  'http://192.168.1.51:8100'
+];
+
 /* ========= MIDDLEWARE ========= */
 
 app.use(cors({
-  origin: true,
+  origin: function (origin, callback) {
+
+    // Permitir peticiones sin origin (Postman, curl, healthchecks)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('No permitido por CORS'));
+    }
+
+  },
   credentials: true
 }));
 
@@ -120,9 +136,9 @@ async function startServer() {
 
     const PORT = process.env.API_PORT || 3000;
 
-    app.listen(PORT, () => {
-      console.log(`🚀 API escuchando en puerto ${PORT}`);
-    });
+    app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 API escuchando en puerto ${PORT}`);
+});
 
   } catch (err) {
 

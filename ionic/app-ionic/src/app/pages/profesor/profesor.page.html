@@ -1,6 +1,25 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-title>Mis clases</ion-title>
+
+    <!-- ORDENAR -->
+    <ion-buttons slot="end">
+      <ion-select
+        interface="popover"
+        [(ngModel)]="ordenActual"
+        (ionChange)="ordenar()">
+
+        <ion-select-option value="fecha">
+          Ordenar por fecha
+        </ion-select-option>
+
+        <ion-select-option value="alumnos">
+          Ordenar por alumnos
+        </ion-select-option>
+
+      </ion-select>
+    </ion-buttons>
+
   </ion-toolbar>
 </ion-header>
 
@@ -27,7 +46,6 @@
         {{ h.plazas_ocupadas }} / {{ h.plazas_totales }}
       </p>
 
-      <!-- Estado -->
       <ion-chip
         [color]="h.reservas_abiertas ? 'success' : 'danger'">
         <ion-label>
@@ -38,8 +56,8 @@
       <ion-grid class="ion-margin-top">
         <ion-row>
 
-          <!-- VER ALUMNOS -->
-          <ion-col size="6">
+          <!-- VER ALUMNOS (pantalla aparte) -->
+          <ion-col size="4">
             <ion-button
               expand="block"
               fill="outline"
@@ -48,8 +66,20 @@
             </ion-button>
           </ion-col>
 
+          <!-- TOGGLE LISTA INLINE -->
+          <ion-col size="4">
+            <ion-button
+              expand="block"
+              fill="clear"
+              (click)="h.mostrarAlumnos = !h.mostrarAlumnos">
+
+              {{ h.mostrarAlumnos ? '−' : '+' }}
+
+            </ion-button>
+          </ion-col>
+
           <!-- ABRIR / CERRAR -->
-          <ion-col size="6">
+          <ion-col size="4">
             <ion-button
               expand="block"
               [color]="h.reservas_abiertas ? 'warning' : 'success'"
@@ -63,8 +93,8 @@
         </ion-row>
       </ion-grid>
 
-      <!-- LISTA DE ALUMNOS INLINE -->
-      <ion-list *ngIf="h.Reservas?.length">
+      <!-- LISTA SOLO SI SE PULSA + -->
+      <ion-list *ngIf="h.mostrarAlumnos">
 
         <ion-item *ngFor="let r of h.Reservas">
 

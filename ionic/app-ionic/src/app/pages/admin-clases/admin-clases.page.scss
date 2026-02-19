@@ -1,0 +1,83 @@
+/* =========================
+   TOOLBAR FILTROS
+========================= */
+
+ion-toolbar:nth-child(2) {
+  --background: #1e1e1e;
+  padding: 8px 0;
+}
+
+ion-toolbar:nth-child(2) ion-item {
+  --background: transparent;
+  --inner-padding-end: 0;
+  margin: 4px 12px;
+  border-radius: 8px;
+  background: #f8f7f7;
+}
+
+/* =========================
+   LISTADO
+========================= */
+
+ion-list {
+  padding: 10px;
+}
+
+ion-item {
+  margin-bottom: 10px;
+  border-radius: 12px;
+  --background: #f8f7f7;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+  transition: transform 0.15s ease;
+}
+
+ion-item:hover {
+  transform: translateY(-2px);
+}
+
+/* =========================
+   TITULO CLASE
+========================= */
+
+ion-label h2 {
+  font-weight: 600;
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+/* =========================
+   SUBTEXTOS
+========================= */
+
+ion-label p {
+  font-size: 13px;
+  margin: 2px 0;
+  opacity: 0.85;
+}
+
+/* =========================
+   CHIP ESTADO
+========================= */
+
+ion-chip {
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+/* =========================
+   BOTÓN
+========================= */
+
+ion-button {
+  margin-left: 10px;
+  font-size: 12px;
+}
+
+/* =========================
+   SPINNER
+========================= */
+
+ion-spinner {
+  width: 40px;
+  height: 40px;
+}

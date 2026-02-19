@@ -2,6 +2,61 @@
   <ion-toolbar color="dark">
     <ion-title>Panel de Clases</ion-title>
   </ion-toolbar>
+
+  <!-- FILTROS -->
+  <ion-toolbar>
+
+    <!-- Fecha -->
+    <ion-item lines="none">
+      <ion-label>Fecha</ion-label>
+      <ion-input
+        type="date"
+        [(ngModel)]="filtroFecha"
+        (ionChange)="aplicarFiltros()">
+      </ion-input>
+    </ion-item>
+
+    <!-- Profesor -->
+    <ion-item lines="none">
+      <ion-label>Profesor</ion-label>
+      <ion-select
+        [(ngModel)]="filtroProfesor"
+        (ionChange)="aplicarFiltros()">
+
+        <ion-select-option value="">
+          Todos
+        </ion-select-option>
+
+        <ion-select-option
+          *ngFor="let p of profesoresUnicos"
+          [value]="p">
+
+          {{p}}
+
+        </ion-select-option>
+
+      </ion-select>
+    </ion-item>
+
+    <!-- Orden -->
+    <ion-item lines="none">
+      <ion-label>Ordenar</ion-label>
+      <ion-select
+        [(ngModel)]="ordenActual"
+        (ionChange)="aplicarFiltros()">
+
+        <ion-select-option value="fecha">
+          Fecha
+        </ion-select-option>
+
+        <ion-select-option value="ocupacion">
+          Ocupación
+        </ion-select-option>
+
+      </ion-select>
+    </ion-item>
+
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
@@ -13,34 +68,24 @@
 
   <ion-list *ngIf="!loading">
 
-    <ion-item *ngFor="let h of horarios">
+    <ion-item *ngFor="let h of horariosFiltrados">
 
       <ion-button
-  slot="end"
-  fill="outline"
-  (click)="verAlumnos(h.id_horario)">
-
-  Ver alumnos
-
-</ion-button>
+        slot="end"
+        fill="outline"
+        (click)="verAlumnos(h.id_horario)">
+        Ver alumnos
+      </ion-button>
 
       <ion-label>
 
-        <h2>
-          {{h.clase}}
-        </h2>
+        <h2>{{h.clase}}</h2>
 
-        <p>
-          👨‍🏫 {{h.profesor}}
-        </p>
+        <p>👨‍🏫 {{h.profesor}}</p>
 
-        <p>
-          📅 {{h.fecha}} — {{h.hora_inicio}}
-        </p>
+        <p>📅 {{h.fecha}} — {{h.hora_inicio}}</p>
 
-        <p>
-          👥 {{h.inscritos}} / {{h.capacidad}}
-        </p>
+        <p>👥 {{h.inscritos}} / {{h.capacidad}}</p>
 
       </ion-label>
 

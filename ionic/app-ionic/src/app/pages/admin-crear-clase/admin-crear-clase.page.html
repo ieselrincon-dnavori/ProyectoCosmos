@@ -6,6 +6,7 @@
 
 <ion-content>
 
+  <!-- Nombre -->
   <ion-item>
     <ion-input
       placeholder="Nombre de la clase"
@@ -13,6 +14,32 @@
     </ion-input>
   </ion-item>
 
+  <!-- Fecha -->
+  <ion-item>
+    <ion-label position="stacked">Fecha</ion-label>
+    <ion-input
+      type="date"
+      [(ngModel)]="clase.fecha">
+    </ion-input>
+  </ion-item>
+
+  <!-- Hora -->
+  <ion-item>
+    <ion-label position="stacked">Hora inicio</ion-label>
+    <ion-input
+      type="time"
+      [(ngModel)]="clase.hora_inicio">
+    </ion-input>
+  </ion-item>
+
+  <!-- Reservas -->
+  <ion-item>
+    <ion-toggle [(ngModel)]="clase.reservas_abiertas">
+      Reservas abiertas
+    </ion-toggle>
+  </ion-item>
+
+  <!-- Profesor -->
   <ion-item>
     <ion-select
       placeholder="Profesor"
@@ -29,6 +56,7 @@
     </ion-select>
   </ion-item>
 
+  <!-- Capacidad -->
   <ion-item>
     <ion-input
       type="number"

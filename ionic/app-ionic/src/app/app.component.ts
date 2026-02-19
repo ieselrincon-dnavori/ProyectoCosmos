@@ -34,38 +34,29 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
 
-    // 🔥 SOLO UNA SUBSCRIPTION GLOBAL
-    this.userState.bono$
-      .pipe(take(1))
-      .subscribe(bono => {
-        this.buildMenu(!!bono);
-      });
+  // 🔥 reaccionar siempre al usuario
+  this.auth.user$.subscribe(user => {
 
-    this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe(() => {
-
-        const user = this.auth.getUser();
-
-        if (!user) {
-          this.menuItems = [];
-          return;
-        }
-
-        // cargar bono SOLO una vez
-        if (user.rol === 'cliente') {
-          this.userState.loadBono();
-        } else {
-          this.buildMenu(false);
-        }
-      });
-
-    // primera carga
-    const user = this.auth.getUser();
-    if (user?.rol === 'cliente') {
-      this.userState.loadBono();
+    if (!user) {
+      this.menuItems = [];
+      return;
     }
-  }
+
+    if (user.rol === 'cliente') {
+      this.userState.loadBono();
+    } else {
+      this.buildMenu(false);
+    }
+
+  });
+
+  // 🔥 reaccionar cuando cambie bono
+  this.userState.bono$.subscribe(bono => {
+    this.buildMenu(!!bono);
+  });
+
+}
+
 
   buildMenu(tieneBono: boolean) {
 
@@ -94,11 +85,10 @@ export class AppComponent implements OnInit {
     /* PROFESOR */
 
     if (user.rol === 'profesor') {
-      this.menuItems = [
-        { title: 'Mis clases', url: '/profesor', icon: 'fitness-outline' },
-        { title: 'Horarios', url: '/horarios', icon: 'calendar-outline' },
-      ];
-    }
+  this.menuItems = [
+    { title: 'Mis clases', url: '/profesor', icon: 'fitness-outline' }
+  ];
+}
 
     /* ADMIN */
 

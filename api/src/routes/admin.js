@@ -4,17 +4,19 @@ const router = express.Router();
 const { sequelize, Usuario, Pago, Horario } = require('../database');
 const roles = require('../middleware/roles');
 
-const { Op, QueryTypes } = require('sequelize');
+const { Op, QueryTypes, fn, col } = require('sequelize');
 
-// 🔐 todo admin
 router.use(roles('admin'));
 
-/* =====================================================
-   ADMIN DASHBOARD PRO
-===================================================== */
+/* =========================
+   DASHBOARD
+========================= */
+router.use(roles('admin'));
 
+/* =========================
+   DASHBOARD
+========================= */
 router.get('/dashboard', async (req, res) => {
-
   try {
 
     const inicioMes = new Date();
@@ -72,18 +74,15 @@ router.get('/dashboard', async (req, res) => {
     });
 
   } catch (err) {
-
-    console.error("🔥 ERROR DASHBOARD:", err);
-
-    res.status(500).json({
-      error: err.message
-    });
+    console.error(err);
+    res.status(500).json({ error: err.message });
   }
-
 });
 
+/* =========================
+   DASHBOARD CHART
+========================= */
 router.get('/dashboard-chart', async (req, res) => {
-
   try {
 
     const ingresos = await Pago.findAll({
@@ -100,8 +99,6 @@ router.get('/dashboard-chart', async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-
 });
-
 
 module.exports = router;
