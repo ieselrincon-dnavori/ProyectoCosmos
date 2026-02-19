@@ -1,13 +1,68 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>admin-dashboard</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ng-container *ngIf="dashboard$ | async as d; else loading">
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">admin-dashboard</ion-title>
-    </ion-toolbar>
-  </ion-header>
-</ion-content>
+  <ion-content class="dashboard-content">
+
+    <div class="dashboard-header">
+      <h1>Panel de Control</h1>
+      <p>Resumen general del gimnasio</p>
+    </div>
+
+    <div class="cards-grid">
+
+      <!-- CLIENTES -->
+      <div class="metric-card blue">
+        <div class="metric-header">
+          <span>Clientes activos</span>
+          <ion-icon name="people-outline"></ion-icon>
+        </div>
+        <h2>{{ d.clientes_activos }}</h2>
+      </div>
+
+      <!-- INGRESOS -->
+      <div class="metric-card green">
+        <div class="metric-header">
+          <span>Ingresos del mes</span>
+          <ion-icon name="cash-outline"></ion-icon>
+        </div>
+        <h2>{{ d.ingresos_mes }}€</h2>
+      </div>
+
+      <!-- CLASES -->
+      <div class="metric-card purple">
+        <div class="metric-header">
+          <span>Clases hoy</span>
+          <ion-icon name="fitness-outline"></ion-icon>
+        </div>
+        <h2>{{ d.clases_hoy }}</h2>
+      </div>
+
+      <!-- OCUPACIÓN -->
+      <div class="metric-card orange">
+        <div class="metric-header">
+          <span>Ocupación media</span>
+          <ion-icon name="stats-chart-outline"></ion-icon>
+        </div>
+        <h2>{{ d.ocupacion_media }}%</h2>
+
+        <div class="progress-bar">
+          <div 
+            class="progress-fill"
+            [style.width.%]="d.ocupacion_media">
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </ion-content>
+
+</ng-container>
+
+<ng-template #loading>
+  <ion-content>
+    <ion-spinner
+      name="crescent"
+      style="display:block;margin:40px auto">
+    </ion-spinner>
+  </ion-content>
+</ng-template>

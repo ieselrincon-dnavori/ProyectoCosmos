@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, shareReplay } from 'rxjs';
+import { ApiService } from './api.service';
 
 export interface Dashboard {
   clientes_activos: number;
@@ -14,49 +14,48 @@ export interface Dashboard {
 })
 export class AdminService {
 
-  private apiAdmin = 'http://localhost:3000/admin';
+  private base = '/admin';
 
-  constructor(private http: HttpClient) {}
+  constructor(private api: ApiService) {}
 
   /* =========================
-     DASHBOARD
+     DASHBOARD (CACHEADO 🔥)
   ========================= */
+
+  dashboard$: Observable<Dashboard> =
+    this.api
+      .get<Dashboard>(`${this.base}/dashboard`)
+      .pipe(shareReplay(1));
 
   getDashboard(): Observable<Dashboard> {
-    return this.http.get<Dashboard>(
-      `${this.apiAdmin}/dashboard`
-    );
+    return this.dashboard$;
   }
 
-  /* =========================
-     PROFESORES (ADMIN)
-  ========================= */
+  /* ========================= */
+
+  refreshDashboard() {
+    this.dashboard$ =
+      this.api
+        .get<Dashboard>(`${this.base}/dashboard`)
+        .pipe(shareReplay(1));
+  }
+
+  /* ========================= */
 
   getProfesores(): Observable<any[]> {
-    return this.http.get<any[]>(
-      `${this.apiAdmin}/profesores`
-    );
+    return this.api.get<any[]>(`${this.base}/profesores`);
   }
-
-  /* =========================
-     CLASES ADMIN
-  ========================= */
 
   getClasesAdmin(): Observable<any[]> {
-    return this.http.get<any[]>(
-      `${this.apiAdmin}/clases`
-    );
+    return this.api.get<any[]>(`${this.base}/clases`);
   }
 
-  /* =========================
-     CREAR CLASE
-  ========================= */
-
-  crearClase(data: any) {
-    return this.http.post(
-      `${this.apiAdmin}/clases`,
-      data
-    );
+  crearClase(data:any){
+    return this.api.post(`${this.base}/clases`, data);
   }
+  getIngresosChart(){
+  return this.api.get<any[]>('/admin/dashboard-chart');
+}
+
 
 }

@@ -3,7 +3,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm install
 # No copiamos todo aquí porque usaremos volúmenes en compose para desarrollo
-COPY . .
+COPY package*.json ./
 EXPOSE 3000
 # El usuario node mejora la seguridad y evita líos de permisos en Ubuntu
 RUN chown -R node:node /app

@@ -30,22 +30,31 @@ export class UserStateService {
    * 🔥 Carga el bono del usuario actual desde el servidor
    * y actualiza el estado global
    */
-  loadBono() {
-    const user = this.auth.getUser();
-    if (!user || user.rol !== 'cliente') {
-      this.bonoSubject.next(null);
-      return;
-    }
+    private bonoCargado = false;
 
-    this.bonoService.getBonoActivo(user.id_usuario).subscribe({
-      next: (bono) => {
-        this.bonoSubject.next(bono);
-      },
-      error: () => {
-        this.bonoSubject.next(null);
-      }
-    });
+loadBono() {
+
+  if (this.bonoCargado) return;
+
+  const user = this.auth.getUser();
+
+  if (!user || user.rol !== 'cliente') {
+    this.bonoSubject.next(null);
+    return;
   }
+
+  this.bonoCargado = true;
+
+  this.bonoService.getBonoActivo(user.id_usuario)
+    .subscribe({
+      next: bono => this.bonoSubject.next(bono),
+      error: () => this.bonoSubject.next(null)
+    });
+}
+
+
+
+
 
   /**
    * 🔥 Establece manualmente el bono en el estado global
@@ -75,6 +84,7 @@ export class UserStateService {
    * 🔥 Limpia todo el estado (útil al hacer logout)
    */
   clear() {
-    this.bonoSubject.next(null);
-  }
+  this.bonoCargado = false;
+  this.bonoSubject.next(null);
+}
 }

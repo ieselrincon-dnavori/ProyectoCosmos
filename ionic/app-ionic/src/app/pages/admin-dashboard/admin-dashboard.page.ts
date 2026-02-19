@@ -1,15 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { AdminService, Dashboard } from '../../services/admin.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-admin-dashboard',
   templateUrl: './admin-dashboard.page.html',
   styleUrls: ['./admin-dashboard.page.scss'],
+  standalone:false
 })
-export class AdminDashboardPage implements OnInit {
+export class AdminDashboardPage {
 
-  constructor() { }
+  dashboard$: Observable<Dashboard>;
 
-  ngOnInit() {
+  constructor(private adminService: AdminService) {
+    this.dashboard$ = this.adminService.getDashboard();
   }
 
 }
+

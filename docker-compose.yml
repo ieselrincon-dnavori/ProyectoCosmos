@@ -56,12 +56,14 @@ services:
 
 
   ionic:
-    build: ./ionic/app-ionic
+    image: node:20
+    working_dir: /app
+    command: bash -c "npm install && npm run start-docker"
     container_name: cosmos-ionic
     restart: unless-stopped
 
     ports:
-      - "${IONIC_PORT}:8100"
+      - "${IONIC_PORT}:4200"
 
     depends_on:
       - api

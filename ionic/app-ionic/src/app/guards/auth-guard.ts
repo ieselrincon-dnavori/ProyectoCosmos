@@ -16,6 +16,7 @@ export class AuthGuard implements CanActivate {
 
     const user = this.auth.getUser();
 
+    // NO LOGIN
     if (!user) {
       this.router.navigate(['/login']);
       return false;
@@ -23,9 +24,28 @@ export class AuthGuard implements CanActivate {
 
     const allowedRoles = route.data['roles'] as string[];
 
+    // ROL NO PERMITIDO
     if (allowedRoles && !allowedRoles.includes(user.rol)) {
-      // Redirigir a su panel correcto
-      this.router.navigate(['/' + user.rol]);
+
+      // redirección segura
+      switch(user.rol){
+
+        case 'cliente':
+          this.router.navigate(['/cliente']);
+          break;
+
+        case 'profesor':
+          this.router.navigate(['/profesor']);
+          break;
+
+        case 'admin':
+          this.router.navigate(['/admin-dashboard']);
+          break;
+
+        default:
+          this.router.navigate(['/login']);
+      }
+
       return false;
     }
 

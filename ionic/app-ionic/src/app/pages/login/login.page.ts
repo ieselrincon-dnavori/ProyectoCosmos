@@ -20,59 +20,42 @@ export class LoginPage {
   constructor(
     private auth: AuthService,
     private router: Router,
-    private userState: UserStateService  // 🔥 Añadido
+    private userState: UserStateService
   ) {}
 
   login() {
+
     this.loading = true;
     this.errorMsg = '';
 
-    this.auth.login(this.email, this.password).subscribe({
-      
-      next: res => {
+    this.auth.login(this.email, this.password)
+      .subscribe({
 
-  this.loading = false;
+        next: res => {
 
-  // 🔥 GUARDAR TOKEN (CRÍTICO)
-  localStorage.setItem('token', res.token);
+          this.loading = false;
 
-  // guardar usuario REAL
-  this.auth.saveUser(res.user);
+          // 🔥 UNA sola llamada
+          this.auth.saveSession(res.token, res.user);
 
-  const user = res.user;
+          // cargar bono SOLO cliente
+          if (res.user.rol === 'cliente') {
+            this.userState.loadBono();
+          }
 
-  // cargar bono si cliente
-  if (user.rol === 'cliente') {
-    this.userState.loadBono();
-  }
+          // navegación automática
+          this.router.navigate(['/' + res.user.rol]);
+        },
 
-  switch (user.rol) {
+        error: err => {
 
-    case 'cliente':
-      this.router.navigate(['/cliente']);
-      break;
+          this.loading = false;
 
-    case 'profesor':
-      this.router.navigate(['/profesor']);
-      break;
-
-    case 'admin':
-      this.router.navigate(['/admin']);
-      break;
-
-    default:
-      this.router.navigate(['/login']); // 🔥 nunca home
-  }
-},
-      error: err => {
-        this.loading = false;
-
-        if (err.status === 401) {
-          this.errorMsg = 'Credenciales incorrectas';
-        } else {
-          this.errorMsg = 'Error de conexión con el servidor';
+          this.errorMsg =
+            err.status === 401
+              ? 'Credenciales incorrectas'
+              : 'Error de conexión con el servidor';
         }
-      }
-    });
+      });
   }
 }

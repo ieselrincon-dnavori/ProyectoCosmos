@@ -126,9 +126,12 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'admin-dashboard',
-    loadChildren: () => import('./pages/admin-dashboard/admin-dashboard.module').then( m => m.AdminDashboardPageModule)
-  }
+  path: 'admin-dashboard',
+  loadChildren: () => import('./pages/admin-dashboard/admin-dashboard.module')
+    .then(m => m.AdminDashboardPageModule),
+  canActivate: [AuthGuard],
+  data: { roles: ['admin'] }
+}
 
 ];
 

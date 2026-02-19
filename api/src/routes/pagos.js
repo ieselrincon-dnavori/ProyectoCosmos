@@ -69,6 +69,7 @@ router.get('/cliente/:id', async (req, res) => {
 /* =========================
    BONO ACTIVO
 ========================= */
+
 router.get('/cliente/:id/activo', async (req, res) => {
   try {
 
@@ -107,14 +108,14 @@ router.get('/cliente/:id/activo', async (req, res) => {
     }
 
     if (!pago) {
-      return res.json({ activo: false });
+      return res.json(null); // 🔥 MUY IMPORTANTE
     }
 
     res.json({
-      activo: true,
-      bono: pago.BonoPlan.nombre_bono,
+      id_pago: pago.id_pago,
+      nombre_bono: pago.BonoPlan.nombre_bono,
       sesiones_restantes: pago.sesiones_restantes,
-      vence: pago.fecha_vencimiento
+      fecha_vencimiento: pago.fecha_vencimiento // 🔥 nombre correcto
     });
 
   } catch (err) {

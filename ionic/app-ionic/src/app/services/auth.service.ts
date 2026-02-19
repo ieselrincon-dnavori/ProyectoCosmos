@@ -13,7 +13,10 @@ export class AuthService {
     return this.http.post<any>(`${this.baseUrl}/login`, { email, password });
   }
 
-  saveUser(user: any) {
+  /* STORAGE */
+
+  saveSession(token: string, user: any) {
+    localStorage.setItem('token', token);
     localStorage.setItem('user', JSON.stringify(user));
   }
 
@@ -21,17 +24,23 @@ export class AuthService {
     return JSON.parse(localStorage.getItem('user') || 'null');
   }
 
-  isLogged(): boolean {
-  return !!this.getUser();
+  getToken() {
+    return localStorage.getItem('token');
+  }
+
+  isLoggedIn(): boolean {
+    return !!this.getToken();
   }
 
   getRole(): string | null {
-    const user = this.getUser();
-    return user ? user.rol : null;
+    return this.getUser()?.rol ?? null;
   }
 
-
   logout() {
-    localStorage.removeItem('user');
+
+    // 🔥 LIMPIEZA TOTAL
+    localStorage.clear();
+    sessionStorage.clear();
+
   }
 }
