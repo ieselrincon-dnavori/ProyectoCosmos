@@ -16,17 +16,73 @@
     <p class="subtitle">Reserva tu plaza en las próximas clases</p>
   </div>
 
-  <div class="horarios-list" *ngIf="horarios.length > 0; else sinHorarios">
+  <!-- FILTROS -->
+  <div class="filtros-container">
+
+    <ion-searchbar
+      placeholder="Buscar clase..."
+      [(ngModel)]="textoBusqueda"
+      (ionInput)="aplicarFiltros()">
+    </ion-searchbar>
+
+    <div class="filtros-row">
+      <ion-input
+        type="date"
+        [(ngModel)]="filtroFecha"
+        (ionChange)="aplicarFiltros()">
+      </ion-input>
+
+      <ion-select
+        placeholder="Profesor"
+        [(ngModel)]="filtroProfesor"
+        (ionChange)="aplicarFiltros()">
+
+        <ion-select-option value="">
+          Todos
+        </ion-select-option>
+
+        <ion-select-option
+          *ngFor="let p of profesoresUnicos"
+          [value]="p">
+
+          {{p}}
+
+        </ion-select-option>
+
+      </ion-select>
+    </div>
+  </div>
+
+  <!-- LISTA -->
+  <div class="horarios-list" *ngIf="horariosFiltrados.length > 0; else sinHorarios">
     
-    <ion-card *ngFor="let h of horarios" class="horario-card">
+    <ion-card *ngFor="let h of horariosFiltrados" class="horario-card">
       <ion-card-content>
-        
+
+        <!-- HEADER CON ICONO VISUAL -->
         <div class="horario-header">
-          <h3 class="clase-title">{{ h.Clase?.nombre_clase }}</h3>
-          <div class="plazas-badge" [ngClass]="{'completo': !h.plazas_disponibles}">
-            <ion-icon name="people-outline"></ion-icon>
-            <span>{{ h.plazas_ocupadas }} / {{ h.plazas_totales }}</span>
+
+          <div class="clase-visual"
+               [ngClass]="getClaseColor(h.Clase?.nombre_clase)">
+            
+            <ion-icon
+              [name]="getIconoClase(h.Clase?.nombre_clase)">
+            </ion-icon>
+
           </div>
+
+          <div class="clase-info">
+            <h3 class="clase-title">
+              {{ h.Clase?.nombre_clase }}
+            </h3>
+
+            <div class="plazas-badge"
+                 [ngClass]="{'completo': !h.plazas_disponibles}">
+              <ion-icon name="people-outline"></ion-icon>
+              <span>{{ h.plazas_ocupadas }} / {{ h.plazas_totales }}</span>
+            </div>
+          </div>
+
         </div>
 
         <div class="horario-details">
@@ -85,7 +141,6 @@
 
       </ion-card-content>
     </ion-card>
-
   </div>
 
   <ng-template #sinHorarios>

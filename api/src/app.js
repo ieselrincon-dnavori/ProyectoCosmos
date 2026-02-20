@@ -20,15 +20,26 @@ const allowedOrigins = [
 app.use(cors({
   origin: function (origin, callback) {
 
-    // Permitir peticiones sin origin (Postman, curl, healthchecks)
+    console.log("Origin:", origin);
+
+    // Permitir sin origin (apps móviles, Postman)
     if (!origin) return callback(null, true);
 
-    if (allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('No permitido por CORS'));
+    // Permitir LAN
+    if (origin.includes('192.168.1.51')) {
+      return callback(null, true);
     }
 
+    // Permitir localhost y webview
+    if (
+      origin.includes('localhost') ||
+      origin.startsWith('capacitor://') ||
+      origin.startsWith('ionic://')
+    ) {
+      return callback(null, true);
+    }
+
+    return callback(null, true); // 🔥 En desarrollo permite todo
   },
   credentials: true
 }));

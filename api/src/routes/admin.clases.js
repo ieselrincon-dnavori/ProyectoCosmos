@@ -97,7 +97,8 @@ router.post('/clases', async (req, res) => {
       capacidad_maxima,
       fecha,
       hora_inicio,
-      reservas_abiertas
+      reservas_abiertas,
+      lugar = 'Sala Principal'
     } = req.body;
 
     if (!nombre_clase || !id_profesor || !capacidad_maxima || !fecha || !hora_inicio) {
@@ -136,7 +137,8 @@ router.post('/clases', async (req, res) => {
       fecha,
       hora_inicio,
       hora_fin,
-      reservas_abiertas: reservas_abiertas ?? true
+      reservas_abiertas: reservas_abiertas ?? true,
+      lugar
     }, { transaction: t });
 
     await t.commit();

@@ -14,6 +14,14 @@ import { AlertController } from '@ionic/angular';
 export class HorariosPage implements OnInit {
 
   horarios: any[] = [];
+  horariosFiltrados: any[] = [];
+
+  textoBusqueda: string = '';
+  filtroFecha: string = '';
+  filtroProfesor: string = '';
+
+  profesoresUnicos: string[] = [];
+
   user: any;
 
   constructor(
@@ -21,7 +29,7 @@ export class HorariosPage implements OnInit {
     private reservaService: ReservaService,
     private auth: AuthService,
     private alertCtrl: AlertController,
-    private userState: UserStateService  // 🔥 Añadido
+    private userState: UserStateService
   ) {}
 
   ngOnInit() {
@@ -29,21 +37,35 @@ export class HorariosPage implements OnInit {
     this.cargarHorarios();
   }
 
-  // 🔥 SOLUCIÓN: Recargar al entrar a la página
   ionViewWillEnter() {
     this.cargarHorarios();
   }
 
   cargarHorarios() {
+
     this.horarioService
       .getHorarios(this.user.id_usuario)
       .subscribe({
-        next: data => this.horarios = data,
+        next: data => {
+
+          this.horarios = data;
+          this.horariosFiltrados = [...this.horarios];
+
+          this.profesoresUnicos = [
+            ...new Set(
+              this.horarios.map(h =>
+                `${h.Clase?.profesor?.nombre} ${h.Clase?.profesor?.apellidos}`
+              )
+            )
+          ];
+
+          this.aplicarFiltros();
+        },
 
         error: err => {
-          // 🔥 si no tiene bono → fuera
           if (err.status === 403) {
             this.horarios = [];
+            this.horariosFiltrados = [];
             return;
           }
 
@@ -52,13 +74,46 @@ export class HorariosPage implements OnInit {
       });
   }
 
+  aplicarFiltros() {
+
+    let resultado = [...this.horarios];
+
+    if (this.textoBusqueda) {
+
+      const texto = this.textoBusqueda.toLowerCase();
+
+      resultado = resultado.filter(h =>
+        h.Clase?.nombre_clase?.toLowerCase().includes(texto)
+      );
+    }
+
+    if (this.filtroFecha) {
+      resultado = resultado.filter(h =>
+        h.fecha === this.filtroFecha
+      );
+    }
+
+    if (this.filtroProfesor) {
+
+      resultado = resultado.filter(h => {
+
+        const nombreCompleto =
+          `${h.Clase?.profesor?.nombre} ${h.Clase?.profesor?.apellidos}`;
+
+        return nombreCompleto === this.filtroProfesor;
+      });
+    }
+
+    this.horariosFiltrados = resultado;
+  }
+
   reservar(horario: any) {
+
     this.reservaService.crearReserva({
       id_cliente: this.user.id_usuario,
       id_horario: horario.id_horario
     }).subscribe({
       next: () => {
-        // 🔥 SOLUCIÓN: Actualizar estado global después de reservar
         this.userState.loadBono();
         this.cargarHorarios();
       },
@@ -74,4 +129,37 @@ export class HorariosPage implements OnInit {
     });
     await alert.present();
   }
+
+  getIconoClase(nombre: string): string {
+
+  if (!nombre) return 'fitness-outline';
+
+  const n = nombre.toLowerCase();
+
+  if (n.includes('yoga')) return 'leaf-outline';
+  if (n.includes('pilates')) return 'body-outline';
+  if (n.includes('spinning')) return 'bicycle-outline';
+  if (n.includes('crossfit')) return 'barbell-outline';
+  if (n.includes('box')) return 'flash-outline';
+  if (n.includes('zumba')) return 'musical-notes-outline';
+
+  return 'fitness-outline';
+}
+
+getClaseColor(nombre: string): string {
+
+  if (!nombre) return 'default';
+
+  const n = nombre.toLowerCase();
+
+  if (n.includes('yoga')) return 'yoga';
+  if (n.includes('pilates')) return 'pilates';
+  if (n.includes('spinning')) return 'spinning';
+  if (n.includes('crossfit')) return 'crossfit';
+  if (n.includes('box')) return 'box';
+  if (n.includes('zumba')) return 'zumba';
+
+  return 'default';
+}
+
 }

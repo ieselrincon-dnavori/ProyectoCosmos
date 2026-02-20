@@ -249,3 +249,65 @@
     }
   }
 }
+
+/* ========================================
+   Clase Visual Badge
+======================================== */
+
+.horario-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.clase-visual {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 28px;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.horario-card:hover .clase-visual {
+  transform: scale(1.08);
+}
+
+/* Colores por tipo */
+
+.yoga {
+  background: linear-gradient(135deg, #4CAF50, #2E7D32);
+}
+
+.pilates {
+  background: linear-gradient(135deg, #9C27B0, #6A1B9A);
+}
+
+.spinning {
+  background: linear-gradient(135deg, #2196F3, #0D47A1);
+}
+
+.crossfit {
+  background: linear-gradient(135deg, #FF5722, #BF360C);
+}
+
+.box {
+  background: linear-gradient(135deg, #F44336, #B71C1C);
+}
+
+.zumba {
+  background: linear-gradient(135deg, #FFEB3B, #F57F17);
+  color: #333;
+}
+
+.default {
+  background: var(--accent-gradient);
+}
+
+.clase-info {
+  flex: 1;
+}
