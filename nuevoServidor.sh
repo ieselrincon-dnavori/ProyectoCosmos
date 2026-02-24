@@ -1,65 +1,62 @@
 #!/bin/bash
 
-echo "🚀 Iniciando configuración Cosmos Fitness..."
+echo "🚀 Configurando Cosmos Fitness en nuevo servidor..."
 
 # ==============================
 # 1️⃣ ACTUALIZAR SISTEMA
 # ==============================
-echo "📦 Actualizando sistema..."
 sudo apt update -y
 
 # ==============================
-# 2️⃣ INSTALAR JAVA 17
+# 2️⃣ INSTALAR CURL
 # ==============================
-echo "☕ Instalando Java 17..."
+sudo apt install -y curl
+
+# ==============================
+# 3️⃣ INSTALAR NODE 20 (LTS)
+# ==============================
+echo "📦 Instalando Node.js 20 LTS..."
+
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt install -y nodejs
+
+echo "🔎 Versiones instaladas:"
+node -v
+npm -v
+
+# ==============================
+# 4️⃣ INSTALAR JAVA 17
+# ==============================
 sudo apt install -y openjdk-17-jdk
 
-echo "🔎 Configurando Java 17 como predeterminado..."
-sudo update-alternatives --set java /usr/lib/jvm/java-17-openjdk-amd64/bin/java 2>/dev/null
-
 # ==============================
-# 3️⃣ INSTALAR DEPENDENCIAS ANDROID
+# 5️⃣ CONFIGURAR ANDROID ENV
 # ==============================
-echo "📱 Configurando variables Android..."
-
 if ! grep -q "ANDROID_HOME" ~/.bashrc; then
-    echo '' >> ~/.bashrc
-    echo 'export ANDROID_HOME=$HOME/Android/Sdk' >> ~/.bashrc
-    echo 'export PATH=$PATH:$ANDROID_HOME/emulator' >> ~/.bashrc
-    echo 'export PATH=$PATH:$ANDROID_HOME/platform-tools' >> ~/.bashrc
-    echo 'export PATH=$PATH:$ANDROID_HOME/tools' >> ~/.bashrc
-    echo 'export PATH=$PATH:$ANDROID_HOME/tools/bin' >> ~/.bashrc
+  echo '' >> ~/.bashrc
+  echo 'export ANDROID_HOME=$HOME/Android/Sdk' >> ~/.bashrc
+  echo 'export PATH=$PATH:$ANDROID_HOME/emulator' >> ~/.bashrc
+  echo 'export PATH=$PATH:$ANDROID_HOME/platform-tools' >> ~/.bashrc
 fi
 
 source ~/.bashrc
 
 # ==============================
-# 4️⃣ LEVANTAR DOCKER
+# 6️⃣ LEVANTAR DOCKER
 # ==============================
-echo "🐳 Levantando contenedores Docker..."
 docker compose up -d
 
 # ==============================
-# 5️⃣ INSTALAR DEPENDENCIAS FRONTEND
+# 7️⃣ INSTALAR DEPENDENCIAS FRONTEND
 # ==============================
-echo "📦 Instalando dependencias Ionic..."
 cd ionic/app-ionic || exit
 npm install
 
 # ==============================
-# 6️⃣ BUILD + SYNC CAPACITOR
+# 8️⃣ BUILD + SYNC
 # ==============================
-echo "🏗 Compilando Ionic..."
 npx ionic build
-
-echo "🔄 Sincronizando Capacitor..."
 npx cap sync android
 
-echo "🎉 Configuración completada correctamente."
-echo ""
-echo "👉 Para abrir Android Studio ejecuta:"
-echo "   npx cap open android"
-echo ""
-echo "👉 Para ver la web:"
-echo "   http://localhost:8100"
-echo ""
+echo "✅ Configuración completada."
+echo "👉 Ejecuta: npx cap open android"
