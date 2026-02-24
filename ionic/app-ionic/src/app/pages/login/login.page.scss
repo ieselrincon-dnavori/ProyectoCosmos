@@ -8,8 +8,13 @@
 }
 
 .transparent-toolbar {
-  --background: transparent;
+  --background: linear-gradient(135deg, #2296f9 0%, #4db0ff 50%, #6bc2ff 100%);
   --border-width: 0;
+}
+
+
+.ion-header {
+  --background: linear-gradient(135deg, #2296f9 0%, #4db0ff 50%, #6bc2ff 100%);
 }
 
 /* ========================================
